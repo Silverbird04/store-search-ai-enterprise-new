@@ -1,0 +1,738 @@
+query_set_version: query_set_v002
+families:
+- family: chicken
+  split: train
+  intent_definition: 조리된 치킨·통닭류를 판매하는 음식점
+  positive_terms:
+  - 치킨
+  - 통닭
+  - 치킨전문점
+  - 닭강정
+  boundary_terms:
+  - 생닭
+  - 닭고기
+  - 육계
+  queries:
+  - type: exact
+    text: 치킨
+  - type: synonym
+    text: 통닭
+  - type: paraphrase
+    text: 닭튀김 파는 곳
+  - type: colloquial
+    text: 치킨 먹을 데
+- family: cafe
+  split: train
+  intent_definition: 커피나 카페 음료를 마실 수 있는 카페·커피전문점
+  positive_terms:
+  - 커피
+  - 카페
+  - 커피전문점
+  - 커피숍
+  boundary_terms:
+  - 원두
+  - 스터디카페
+  - 음료도매
+  queries:
+  - type: exact
+    text: 카페
+  - type: synonym
+    text: 커피전문점
+  - type: paraphrase
+    text: 커피 마실 곳
+  - type: colloquial
+    text: 커피 한잔할 데
+- family: hair
+  split: train
+  intent_definition: 커트·염색·펌 등 두발 미용 서비스를 제공하는 곳
+  positive_terms:
+  - 미용실
+  - 두발미용
+  - 헤어
+  - 미용
+  boundary_terms:
+  - 피부미용
+  - 네일
+  - 화장품
+  queries:
+  - type: exact
+    text: 미용실
+  - type: synonym
+    text: 헤어샵
+  - type: paraphrase
+    text: 머리 자르는 곳
+  - type: colloquial
+    text: 머리할 데
+- family: clothing
+  split: train
+  intent_definition: 의류·옷을 주로 판매하는 소매 매장
+  positive_terms:
+  - 의류
+  - 여성의류
+  - 남성의류
+  - 옷
+  - 숙녀복
+  boundary_terms:
+  - 의류수선
+  - 신발
+  - 잡화
+  queries:
+  - type: exact
+    text: 의류 매장
+  - type: synonym
+    text: 옷가게
+  - type: paraphrase
+    text: 옷 파는 곳
+  - type: colloquial
+    text: 옷 사는 데
+- family: pharmacy
+  split: train
+  intent_definition: 일반 의약품을 판매하는 약국 또는 의약품 소매점
+  positive_terms:
+  - 약국
+  - 의약품
+  - 양약
+  - 약
+  boundary_terms:
+  - 의료서비스
+  - 의료기기
+  - 한의원
+  queries:
+  - type: exact
+    text: 약국
+  - type: synonym
+    text: 의약품 판매점
+  - type: paraphrase
+    text: 약 사는 곳
+  - type: colloquial
+    text: 약 파는 데
+- family: butcher
+  split: train
+  intent_definition: 생고기·식육·정육·축산물을 소매 판매하는 곳
+  positive_terms:
+  - 정육
+  - 정육점
+  - 식육
+  - 육류
+  - 축산물
+  boundary_terms:
+  - 삼겹살
+  - 돼지고기
+  - 한식육류
+  - 고깃집
+  queries:
+  - type: exact
+    text: 정육점
+  - type: synonym
+    text: 식육점
+  - type: paraphrase
+    text: 고기 파는 곳
+  - type: colloquial
+    text: 생고기 사는 데
+- family: bakery
+  split: train
+  intent_definition: 빵·제과류를 만들어 판매하거나 주로 판매하는 제과점·베이커리
+  positive_terms:
+  - 빵
+  - 베이커리
+  - 제과
+  - 제과점
+  - 제과제빵
+  boundary_terms:
+  - 케이크
+  - 디저트
+  - 카페
+  queries:
+  - type: exact
+    text: 베이커리
+  - type: synonym
+    text: 빵집
+  - type: paraphrase
+    text: 빵 파는 곳
+  - type: colloquial
+    text: 빵 사는 데
+- family: korean_food
+  split: train
+  intent_definition: 한식을 조리해 제공하는 음식점
+  positive_terms:
+  - 한식
+  - 한식점
+  - 한식음식점
+  boundary_terms:
+  - 일반음식점
+  - 분식
+  - 중식
+  queries:
+  - type: exact
+    text: 한식
+  - type: synonym
+    text: 한식집
+  - type: paraphrase
+    text: 한식 먹을 곳
+  - type: colloquial
+    text: 밥 먹을 한식집
+- family: cosmetics
+  split: train
+  intent_definition: 화장품을 주로 판매하는 매장
+  positive_terms:
+  - 화장품
+  - 화장품판매
+  - 화장품소매
+  boundary_terms:
+  - 피부미용
+  - 미용실
+  - 네일
+  queries:
+  - type: exact
+    text: 화장품
+  - type: synonym
+    text: 화장품 가게
+  - type: paraphrase
+    text: 화장품 파는 곳
+  - type: colloquial
+    text: 화장품 사는 데
+- family: nail
+  split: train
+  intent_definition: 손발톱 네일아트·네일관리 서비스를 제공하는 곳
+  positive_terms:
+  - 네일
+  - 네일아트
+  - 네일샵
+  boundary_terms:
+  - 피부미용
+  - 미용실
+  - 화장품
+  queries:
+  - type: exact
+    text: 네일아트
+  - type: synonym
+    text: 네일샵
+  - type: paraphrase
+    text: 손톱 관리 받는 곳
+  - type: colloquial
+    text: 네일 받는 데
+- family: pizza
+  split: train
+  intent_definition: 피자를 조리해 판매하는 음식점
+  positive_terms:
+  - 피자
+  - 피자전문점
+  boundary_terms:
+  - 치킨
+  - 햄버거
+  - 양식
+  queries:
+  - type: exact
+    text: 피자
+  - type: synonym
+    text: 피자집
+  - type: paraphrase
+    text: 피자 파는 곳
+  - type: colloquial
+    text: 피자 먹을 데
+- family: rice_cake
+  split: train
+  intent_definition: 떡을 제조하거나 주로 판매하는 떡집
+  positive_terms:
+  - 떡
+  - 떡류
+  - 떡집
+  boundary_terms:
+  - 떡볶이
+  - 한식
+  - 디저트
+  queries:
+  - type: exact
+    text: 떡
+  - type: synonym
+    text: 떡집
+  - type: paraphrase
+    text: 떡 파는 곳
+  - type: colloquial
+    text: 떡 사는 데
+- family: side_dish
+  split: train
+  intent_definition: 반찬을 조리·판매하는 반찬가게
+  positive_terms:
+  - 반찬
+  - 반찬가게
+  - 반찬류
+  boundary_terms:
+  - 한식
+  - 식품
+  - 일반음식점
+  queries:
+  - type: exact
+    text: 반찬
+  - type: synonym
+    text: 반찬가게
+  - type: paraphrase
+    text: 반찬 파는 곳
+  - type: colloquial
+    text: 반찬 사는 데
+- family: shoes
+  split: train
+  intent_definition: 신발을 주로 판매하는 소매 매장
+  positive_terms:
+  - 신발
+  - 신발판매
+  - 구두
+  boundary_terms:
+  - 신발수선
+  - 의류
+  - 잡화
+  queries:
+  - type: exact
+    text: 신발
+  - type: synonym
+    text: 신발가게
+  - type: paraphrase
+    text: 신발 파는 곳
+  - type: colloquial
+    text: 신발 사는 데
+- family: fruit
+  split: val
+  intent_definition: 과일·청과를 주로 소매 판매하는 매장
+  positive_terms:
+  - 과일
+  - 청과
+  - 청과물
+  boundary_terms:
+  - 야채
+  - 채소
+  - 농산물
+  - 마트
+  queries:
+  - type: exact
+    text: 과일
+  - type: synonym
+    text: 청과
+  - type: paraphrase
+    text: 과일 파는 곳
+  - type: colloquial
+    text: 과일 사는 데
+- family: vegetable
+  split: val
+  intent_definition: 채소·야채를 주로 소매 판매하는 매장
+  positive_terms:
+  - 야채
+  - 채소
+  - 채소류
+  boundary_terms:
+  - 과일
+  - 청과
+  - 농산물
+  - 마트
+  queries:
+  - type: exact
+    text: 채소
+  - type: synonym
+    text: 야채가게
+  - type: paraphrase
+    text: 야채 파는 곳
+  - type: colloquial
+    text: 채소 사는 데
+- family: seafood
+  split: val
+  intent_definition: 생선·수산물·해산물을 주로 소매 판매하는 매장
+  positive_terms:
+  - 수산물
+  - 생선
+  - 해산물
+  - 수산
+  boundary_terms:
+  - 횟집
+  - 회
+  - 일식
+  queries:
+  - type: exact
+    text: 수산물
+  - type: synonym
+    text: 생선가게
+  - type: paraphrase
+    text: 해산물 파는 곳
+  - type: colloquial
+    text: 수산물 사는 데
+- family: books
+  split: val
+  intent_definition: 책·도서·서적을 주로 판매하는 서점
+  positive_terms:
+  - 서점
+  - 서적
+  - 도서
+  - 책
+  boundary_terms:
+  - 문구
+  - 독서실
+  - 교육
+  queries:
+  - type: exact
+    text: 서점
+  - type: synonym
+    text: 도서 매장
+  - type: paraphrase
+    text: 책 파는 곳
+  - type: colloquial
+    text: 책 사는 데
+- family: eyewear
+  split: val
+  intent_definition: 안경·안경렌즈·콘택트렌즈를 판매하거나 맞춰주는 안경점
+  positive_terms:
+  - 안경
+  - 안경점
+  - 안경렌즈
+  - 콘택트렌즈
+  boundary_terms:
+  - 안과
+  - 의료서비스
+  queries:
+  - type: exact
+    text: 안경점
+  - type: synonym
+    text: 안경 가게
+  - type: paraphrase
+    text: 안경 맞추는 곳
+  - type: colloquial
+    text: 렌즈 사는 데
+- family: flowers
+  split: val
+  intent_definition: 생화·꽃다발·화훼류를 주로 판매하는 꽃집
+  positive_terms:
+  - 꽃
+  - 생화
+  - 꽃집
+  - 화훼
+  - 꽃다발
+  boundary_terms:
+  - 화분
+  - 식물
+  - 조경
+  queries:
+  - type: exact
+    text: 꽃집
+  - type: synonym
+    text: 생화 가게
+  - type: paraphrase
+    text: 꽃다발 파는 곳
+  - type: colloquial
+    text: 꽃 사는 데
+- family: fitness
+  split: val
+  intent_definition: 헬스·웨이트 트레이닝을 할 수 있는 체력단련 시설
+  positive_terms:
+  - 헬스
+  - 헬스장
+  - 피트니스
+  - 체력단련
+  boundary_terms:
+  - 필라테스
+  - 요가
+  - 태권도
+  queries:
+  - type: exact
+    text: 헬스장
+  - type: synonym
+    text: 피트니스센터
+  - type: paraphrase
+    text: 웨이트 운동하는 곳
+  - type: colloquial
+    text: 헬스할 데
+- family: stationery
+  split: val
+  intent_definition: 문구·학용품을 주로 판매하는 문구점
+  positive_terms:
+  - 문구
+  - 문구점
+  - 학용품
+  boundary_terms:
+  - 서적
+  - 잡화
+  - 완구
+  queries:
+  - type: exact
+    text: 문구
+  - type: synonym
+    text: 문구점
+  - type: paraphrase
+    text: 학용품 파는 곳
+  - type: colloquial
+    text: 문구 사는 데
+- family: chinese_food
+  split: test
+  intent_definition: 중국식 요리를 조리해 제공하는 음식점
+  positive_terms:
+  - 중식
+  - 중국집
+  - 중식당
+  - 중화요리
+  boundary_terms:
+  - 마라탕
+  - 한식
+  - 일반음식점
+  queries:
+  - type: exact
+    text: 중식
+  - type: synonym
+    text: 중국집
+  - type: paraphrase
+    text: 중국요리 먹을 곳
+  - type: colloquial
+    text: 중국음식 먹을 데
+- family: snack_food
+  split: test
+  intent_definition: 김밥·떡볶이 등 분식류를 조리해 제공하는 음식점
+  positive_terms:
+  - 분식
+  - 분식집
+  - 떡볶이
+  - 김밥
+  boundary_terms:
+  - 한식
+  - 일반음식점
+  - 편의점
+  queries:
+  - type: exact
+    text: 분식
+  - type: synonym
+    text: 분식집
+  - type: paraphrase
+    text: 떡볶이 김밥 파는 곳
+  - type: colloquial
+    text: 간단히 분식 먹을 데
+- family: japanese_food
+  split: test
+  intent_definition: 일본식 요리를 조리해 제공하는 음식점
+  positive_terms:
+  - 일식
+  - 일식집
+  - 일본음식
+  - 일본요리
+  boundary_terms:
+  - 중식
+  - 한식
+  - 횟집
+  queries:
+  - type: exact
+    text: 일식
+  - type: synonym
+    text: 일식집
+  - type: paraphrase
+    text: 일본 음식 먹을 곳
+  - type: colloquial
+    text: 일식 먹을 데
+- family: icecream
+  split: test
+  intent_definition: 아이스크림을 주로 판매하는 매장
+  positive_terms:
+  - 아이스크림
+  - 아이스크림점
+  boundary_terms:
+  - 디저트
+  - 카페
+  - 편의점
+  queries:
+  - type: exact
+    text: 아이스크림
+  - type: synonym
+    text: 아이스크림 가게
+  - type: paraphrase
+    text: 아이스크림 파는 곳
+  - type: colloquial
+    text: 아이스크림 먹을 데
+- family: dental
+  split: test
+  intent_definition: 치아·구강 진료를 제공하는 치과 의료기관
+  positive_terms:
+  - 치과
+  - 치과의원
+  - 치과진료
+  boundary_terms:
+  - 한의원
+  - 의료서비스
+  - 약국
+  queries:
+  - type: exact
+    text: 치과
+  - type: synonym
+    text: 치과의원
+  - type: paraphrase
+    text: 치아 치료하는 곳
+  - type: colloquial
+    text: 이빨 아플 때 가는 곳
+- family: oriental_clinic
+  split: test
+  intent_definition: 한의학 기반 진료·침 치료 등을 제공하는 한의원
+  positive_terms:
+  - 한의원
+  - 한방
+  - 한의학
+  boundary_terms:
+  - 치과
+  - 의료서비스
+  - 약국
+  queries:
+  - type: exact
+    text: 한의원
+  - type: synonym
+    text: 한방 진료
+  - type: paraphrase
+    text: 침 맞는 곳
+  - type: colloquial
+    text: 한방 치료 받는 데
+- family: jewelry
+  split: test
+  intent_definition: 귀금속·주얼리·금은 제품을 주로 판매하는 매장
+  positive_terms:
+  - 귀금속
+  - 금은방
+  - 주얼리
+  - 보석
+  boundary_terms:
+  - 악세사리
+  - 잡화
+  queries:
+  - type: exact
+    text: 귀금속
+  - type: synonym
+    text: 금은방
+  - type: paraphrase
+    text: 목걸이 반지 파는 곳
+  - type: colloquial
+    text: 주얼리 사는 데
+- family: bedding
+  split: test
+  intent_definition: 이불·침구류를 주로 판매하는 매장
+  positive_terms:
+  - 침구류
+  - 이불
+  - 침구
+  boundary_terms:
+  - 의류
+  - 가구
+  - 잡화
+  queries:
+  - type: exact
+    text: 침구류
+  - type: synonym
+    text: 이불가게
+  - type: paraphrase
+    text: 이불 파는 곳
+  - type: colloquial
+    text: 침구 사는 데
+- family: furniture
+  split: test
+  intent_definition: 가구를 주로 판매하는 매장
+  positive_terms:
+  - 가구
+  - 가구점
+  boundary_terms:
+  - 침구류
+  - 생활용품
+  - 인테리어
+  queries:
+  - type: exact
+    text: 가구
+  - type: synonym
+    text: 가구점
+  - type: paraphrase
+    text: 책상 의자 파는 곳
+  - type: colloquial
+    text: 가구 사는 데
+- family: hamburger
+  split: test
+  intent_definition: 햄버거·버거류를 조리해 판매하는 음식점
+  positive_terms:
+  - 햄버거
+  - 버거
+  - 햄버거전문점
+  boundary_terms:
+  - 토스트
+  - 피자
+  - 치킨
+  queries:
+  - type: exact
+    text: 햄버거
+  - type: synonym
+    text: 버거집
+  - type: paraphrase
+    text: 햄버거 파는 곳
+  - type: colloquial
+    text: 버거 먹을 데
+- family: noodles
+  split: test
+  intent_definition: 국수·면요리를 주로 제공하는 음식점
+  positive_terms:
+  - 국수
+  - 국수집
+  - 면류
+  - 칼국수
+  boundary_terms:
+  - 중식
+  - 한식
+  - 분식
+  queries:
+  - type: exact
+    text: 국수
+  - type: synonym
+    text: 국수집
+  - type: paraphrase
+    text: 면요리 먹을 곳
+  - type: colloquial
+    text: 면요리 먹을 데
+- family: pork_cutlet
+  split: test
+  intent_definition: 돈까스·돈가스를 조리해 제공하는 음식점
+  positive_terms:
+  - 돈까스
+  - 돈가스
+  boundary_terms:
+  - 일식
+  - 한식
+  - 분식
+  queries:
+  - type: exact
+    text: 돈까스
+  - type: synonym
+    text: 돈가스집
+  - type: paraphrase
+    text: 돈까스 먹을 곳
+  - type: colloquial
+    text: 돈가스 먹을 데
+- family: dumpling
+  split: test
+  intent_definition: 만두를 주로 판매하거나 제공하는 음식점·매장
+  positive_terms:
+  - 만두
+  - 만두집
+  boundary_terms:
+  - 분식
+  - 한식
+  - 중식
+  queries:
+  - type: exact
+    text: 만두
+  - type: synonym
+    text: 만두집
+  - type: paraphrase
+    text: 만두 파는 곳
+  - type: colloquial
+    text: 만두 먹을 데
+- family: toast
+  split: test
+  intent_definition: 토스트를 주로 조리해 판매하는 음식점·매장
+  positive_terms:
+  - 토스트
+  - 토스트전문점
+  boundary_terms:
+  - 햄버거
+  - 분식
+  - 카페
+  queries:
+  - type: exact
+    text: 토스트
+  - type: synonym
+    text: 토스트 가게
+  - type: paraphrase
+    text: 토스트 파는 곳
+  - type: colloquial
+    text: 토스트 먹을 데

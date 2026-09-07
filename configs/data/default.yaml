@@ -1,0 +1,57 @@
+dataset_version: stores_v002
+
+excel:
+  sheets:
+    대전가맹점:
+      source_region: 대전
+    세종가맹점:
+      source_region: 세종
+      
+column_map:
+  "No.": source_row_no_raw
+  "가맹점명": store_name_raw
+  "사업자번호": business_no_raw
+  "가맹점번호": merchant_no_raw
+  "주소": address_raw
+  "LAT": latitude_raw
+  "LOT": longitude_raw
+  "법정동코드": legal_dong_code_raw
+  "시장분류코드": market_type_raw
+  "시장명": market_name_raw
+  "취급품목": item_raw
+  "카드결제여부": card_payment_raw
+  "모바일결제여부": mobile_payment_raw
+required_raw_columns:
+  - 가맹점명
+  - 사업자번호
+  - 주소
+  - LAT
+  - LOT
+  - 법정동코드
+  - 시장분류코드
+  - 시장명
+  - 취급품목
+  - 카드결제여부
+  - 모바일결제여부
+optional_raw_columns: [가맹점번호]
+validation:
+  latitude_min: 33.0
+  latitude_max: 39.5
+  longitude_min: 124.0
+  longitude_max: 132.0
+  legal_dong_code_length: 10
+  business_no_length: 10
+search_text_templates:
+  t1_minimal:
+    fields: [store_name, item_text]
+  t2_market:
+    fields: [store_name, market_name, item_text]
+  t3_market_type:
+    fields: [store_name, market_name, market_type, item_text]
+valid_market_types:
+  - 골목형상점가
+  - 전통시장
+  - 자율상권구역
+  - 일반지하상점가
+  - 상권활성화구역
+  - 기타

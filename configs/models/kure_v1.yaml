@@ -1,0 +1,6 @@
+name: kure_v1
+model_id: nlpai-lab/KURE-v1
+query_prompt_name: null
+normalize_embeddings: true
+target_dimension: null
+batch_size: 32
