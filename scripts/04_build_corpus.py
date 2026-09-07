@@ -8,10 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
-
-CORPUS_VERSION = "store_corpus_v001"
-
-DATASET_VERSION = "stores_v002"
+from store_search_ai.pipeline.common import load_config
 
 
 def text_hash(
@@ -37,30 +34,44 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
+        "--config",
+        default="configs/benchmark/storesearch_ko_v1.yaml",
+        help="dataset_version/corpus_version을 읽어올 benchmark config",
+    )
+
+    parser.add_argument(
         "--input",
-        default=(
-            "data/processed/"
-            "stores_master_v002.parquet"
-        ),
+        default=None,
+        help="기본값: data/processed/stores_master_{dataset_version}.parquet",
     )
 
     parser.add_argument(
         "--output",
-        default=(
-            "data/corpus/"
-            "store_corpus_v001.parquet"
-        ),
+        default=None,
+        help="기본값: data/corpus/{corpus_version}.parquet",
     )
 
     parser.add_argument(
         "--manifest",
-        default=(
-            "data/corpus/"
-            "store_corpus_v001_manifest.json"
-        ),
+        default=None,
+        help="기본값: data/corpus/{corpus_version}_manifest.json",
     )
 
     args = parser.parse_args()
+
+    config = load_config(args.config)
+
+    DATASET_VERSION = config["dataset_version"]
+    CORPUS_VERSION = config["corpus_version"]
+
+    if args.input is None:
+        args.input = f"data/processed/stores_master_{DATASET_VERSION}.parquet"
+
+    if args.output is None:
+        args.output = f"data/corpus/{CORPUS_VERSION}.parquet"
+
+    if args.manifest is None:
+        args.manifest = f"data/corpus/{CORPUS_VERSION}_manifest.json"
 
     input_path = Path(
         args.input

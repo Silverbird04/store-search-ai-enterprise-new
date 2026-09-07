@@ -36,7 +36,7 @@ def get_benchmark_dir(config: dict, create: bool = True) -> Path:
 def sha256_file(path: str | Path) -> str:
     """파일 전체를 청크 단위로 읽어 SHA256 hexdigest를 반환한다.
 
-    05_init_benchmark.py, 14_build_qrels.py에 각각 있던 동일 구현을 통합.
+    05_init_benchmark.py, 12_build_qrels.py에 각각 있던 동일 구현을 통합.
     (config/queries 변경 추적용 — data/corpus의 text_hash와는 별개 용도)
     """
 
@@ -63,7 +63,7 @@ def write_trec_qrels(frame: pd.DataFrame, path: str | Path) -> None:
     """query_id/doc_id/relevance 컬럼을 가진 DataFrame을 TREC qrels 포맷으로 저장한다.
 
     포맷: "{query_id} 0 {doc_id} {relevance}"
-    12_prepare_full_annotations.py, 14_build_qrels.py에 각각 있던 동일 구현을 통합.
+    10_prepare_full_annotations.py, 12_build_qrels.py에 각각 있던 동일 구현을 통합.
     """
 
     path = Path(path)

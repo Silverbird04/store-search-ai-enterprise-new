@@ -1,7 +1,7 @@
 benchmark_version: storesearch_ko_v1
-dataset_version: stores_v002
-corpus_version: store_corpus_v001
-corpus_path: data/corpus/store_corpus_v001.parquet
+dataset_version: stores_v003
+corpus_version: store_corpus_v002
+corpus_path: data/corpus/store_corpus_v002.parquet
 benchmark_dir: benchmark/storesearch_ko_v1
 
 relevance:

@@ -1,145 +1,153 @@
 ﻿query_id,query,split,query_family,query_type,intent_definition,pool_positive_terms,pool_boundary_terms,query_set_version,status
-q_chicken_01,치킨,train,chicken,exact,조리된 치킨·통닭류를 판매하는 음식점,치킨|통닭|치킨전문점|닭강정,생닭|닭고기|육계,query_set_v002,active
-q_chicken_02,통닭,train,chicken,synonym,조리된 치킨·통닭류를 판매하는 음식점,치킨|통닭|치킨전문점|닭강정,생닭|닭고기|육계,query_set_v002,active
-q_chicken_03,닭튀김 파는 곳,train,chicken,paraphrase,조리된 치킨·통닭류를 판매하는 음식점,치킨|통닭|치킨전문점|닭강정,생닭|닭고기|육계,query_set_v002,active
-q_chicken_04,치킨 먹을 데,train,chicken,colloquial,조리된 치킨·통닭류를 판매하는 음식점,치킨|통닭|치킨전문점|닭강정,생닭|닭고기|육계,query_set_v002,active
-q_cafe_01,카페,train,cafe,exact,커피나 카페 음료를 마실 수 있는 카페·커피전문점,커피|카페|커피전문점|커피숍,원두|스터디카페|음료도매,query_set_v002,active
-q_cafe_02,커피전문점,train,cafe,synonym,커피나 카페 음료를 마실 수 있는 카페·커피전문점,커피|카페|커피전문점|커피숍,원두|스터디카페|음료도매,query_set_v002,active
-q_cafe_03,커피 마실 곳,train,cafe,paraphrase,커피나 카페 음료를 마실 수 있는 카페·커피전문점,커피|카페|커피전문점|커피숍,원두|스터디카페|음료도매,query_set_v002,active
-q_cafe_04,커피 한잔할 데,train,cafe,colloquial,커피나 카페 음료를 마실 수 있는 카페·커피전문점,커피|카페|커피전문점|커피숍,원두|스터디카페|음료도매,query_set_v002,active
-q_hair_01,미용실,train,hair,exact,커트·염색·펌 등 두발 미용 서비스를 제공하는 곳,미용실|두발미용|헤어|미용,피부미용|네일|화장품,query_set_v002,active
-q_hair_02,헤어샵,train,hair,synonym,커트·염색·펌 등 두발 미용 서비스를 제공하는 곳,미용실|두발미용|헤어|미용,피부미용|네일|화장품,query_set_v002,active
-q_hair_03,머리 자르는 곳,train,hair,paraphrase,커트·염색·펌 등 두발 미용 서비스를 제공하는 곳,미용실|두발미용|헤어|미용,피부미용|네일|화장품,query_set_v002,active
-q_hair_04,머리할 데,train,hair,colloquial,커트·염색·펌 등 두발 미용 서비스를 제공하는 곳,미용실|두발미용|헤어|미용,피부미용|네일|화장품,query_set_v002,active
-q_clothing_01,의류 매장,train,clothing,exact,의류·옷을 주로 판매하는 소매 매장,의류|여성의류|남성의류|옷|숙녀복,의류수선|신발|잡화,query_set_v002,active
-q_clothing_02,옷가게,train,clothing,synonym,의류·옷을 주로 판매하는 소매 매장,의류|여성의류|남성의류|옷|숙녀복,의류수선|신발|잡화,query_set_v002,active
-q_clothing_03,옷 파는 곳,train,clothing,paraphrase,의류·옷을 주로 판매하는 소매 매장,의류|여성의류|남성의류|옷|숙녀복,의류수선|신발|잡화,query_set_v002,active
-q_clothing_04,옷 사는 데,train,clothing,colloquial,의류·옷을 주로 판매하는 소매 매장,의류|여성의류|남성의류|옷|숙녀복,의류수선|신발|잡화,query_set_v002,active
-q_pharmacy_01,약국,train,pharmacy,exact,일반 의약품을 판매하는 약국 또는 의약품 소매점,약국|의약품|양약|약,의료서비스|의료기기|한의원,query_set_v002,active
-q_pharmacy_02,의약품 판매점,train,pharmacy,synonym,일반 의약품을 판매하는 약국 또는 의약품 소매점,약국|의약품|양약|약,의료서비스|의료기기|한의원,query_set_v002,active
-q_pharmacy_03,약 사는 곳,train,pharmacy,paraphrase,일반 의약품을 판매하는 약국 또는 의약품 소매점,약국|의약품|양약|약,의료서비스|의료기기|한의원,query_set_v002,active
-q_pharmacy_04,약 파는 데,train,pharmacy,colloquial,일반 의약품을 판매하는 약국 또는 의약품 소매점,약국|의약품|양약|약,의료서비스|의료기기|한의원,query_set_v002,active
-q_butcher_01,정육점,train,butcher,exact,생고기·식육·정육·축산물을 소매 판매하는 곳,정육|정육점|식육|육류|축산물,삼겹살|돼지고기|한식육류|고깃집,query_set_v002,active
-q_butcher_02,식육점,train,butcher,synonym,생고기·식육·정육·축산물을 소매 판매하는 곳,정육|정육점|식육|육류|축산물,삼겹살|돼지고기|한식육류|고깃집,query_set_v002,active
-q_butcher_03,고기 파는 곳,train,butcher,paraphrase,생고기·식육·정육·축산물을 소매 판매하는 곳,정육|정육점|식육|육류|축산물,삼겹살|돼지고기|한식육류|고깃집,query_set_v002,active
-q_butcher_04,생고기 사는 데,train,butcher,colloquial,생고기·식육·정육·축산물을 소매 판매하는 곳,정육|정육점|식육|육류|축산물,삼겹살|돼지고기|한식육류|고깃집,query_set_v002,active
-q_bakery_01,베이커리,train,bakery,exact,빵·제과류를 만들어 판매하거나 주로 판매하는 제과점·베이커리,빵|베이커리|제과|제과점|제과제빵,케이크|디저트|카페,query_set_v002,active
-q_bakery_02,빵집,train,bakery,synonym,빵·제과류를 만들어 판매하거나 주로 판매하는 제과점·베이커리,빵|베이커리|제과|제과점|제과제빵,케이크|디저트|카페,query_set_v002,active
-q_bakery_03,빵 파는 곳,train,bakery,paraphrase,빵·제과류를 만들어 판매하거나 주로 판매하는 제과점·베이커리,빵|베이커리|제과|제과점|제과제빵,케이크|디저트|카페,query_set_v002,active
-q_bakery_04,빵 사는 데,train,bakery,colloquial,빵·제과류를 만들어 판매하거나 주로 판매하는 제과점·베이커리,빵|베이커리|제과|제과점|제과제빵,케이크|디저트|카페,query_set_v002,active
-q_korean_food_01,한식,train,korean_food,exact,한식을 조리해 제공하는 음식점,한식|한식점|한식음식점,일반음식점|분식|중식,query_set_v002,active
-q_korean_food_02,한식집,train,korean_food,synonym,한식을 조리해 제공하는 음식점,한식|한식점|한식음식점,일반음식점|분식|중식,query_set_v002,active
-q_korean_food_03,한식 먹을 곳,train,korean_food,paraphrase,한식을 조리해 제공하는 음식점,한식|한식점|한식음식점,일반음식점|분식|중식,query_set_v002,active
-q_korean_food_04,밥 먹을 한식집,train,korean_food,colloquial,한식을 조리해 제공하는 음식점,한식|한식점|한식음식점,일반음식점|분식|중식,query_set_v002,active
-q_cosmetics_01,화장품,train,cosmetics,exact,화장품을 주로 판매하는 매장,화장품|화장품판매|화장품소매,피부미용|미용실|네일,query_set_v002,active
-q_cosmetics_02,화장품 가게,train,cosmetics,synonym,화장품을 주로 판매하는 매장,화장품|화장품판매|화장품소매,피부미용|미용실|네일,query_set_v002,active
-q_cosmetics_03,화장품 파는 곳,train,cosmetics,paraphrase,화장품을 주로 판매하는 매장,화장품|화장품판매|화장품소매,피부미용|미용실|네일,query_set_v002,active
-q_cosmetics_04,화장품 사는 데,train,cosmetics,colloquial,화장품을 주로 판매하는 매장,화장품|화장품판매|화장품소매,피부미용|미용실|네일,query_set_v002,active
-q_nail_01,네일아트,train,nail,exact,손발톱 네일아트·네일관리 서비스를 제공하는 곳,네일|네일아트|네일샵,피부미용|미용실|화장품,query_set_v002,active
-q_nail_02,네일샵,train,nail,synonym,손발톱 네일아트·네일관리 서비스를 제공하는 곳,네일|네일아트|네일샵,피부미용|미용실|화장품,query_set_v002,active
-q_nail_03,손톱 관리 받는 곳,train,nail,paraphrase,손발톱 네일아트·네일관리 서비스를 제공하는 곳,네일|네일아트|네일샵,피부미용|미용실|화장품,query_set_v002,active
-q_nail_04,네일 받는 데,train,nail,colloquial,손발톱 네일아트·네일관리 서비스를 제공하는 곳,네일|네일아트|네일샵,피부미용|미용실|화장품,query_set_v002,active
-q_pizza_01,피자,train,pizza,exact,피자를 조리해 판매하는 음식점,피자|피자전문점,치킨|햄버거|양식,query_set_v002,active
-q_pizza_02,피자집,train,pizza,synonym,피자를 조리해 판매하는 음식점,피자|피자전문점,치킨|햄버거|양식,query_set_v002,active
-q_pizza_03,피자 파는 곳,train,pizza,paraphrase,피자를 조리해 판매하는 음식점,피자|피자전문점,치킨|햄버거|양식,query_set_v002,active
-q_pizza_04,피자 먹을 데,train,pizza,colloquial,피자를 조리해 판매하는 음식점,피자|피자전문점,치킨|햄버거|양식,query_set_v002,active
-q_rice_cake_01,떡,train,rice_cake,exact,떡을 제조하거나 주로 판매하는 떡집,떡|떡류|떡집,떡볶이|한식|디저트,query_set_v002,active
-q_rice_cake_02,떡집,train,rice_cake,synonym,떡을 제조하거나 주로 판매하는 떡집,떡|떡류|떡집,떡볶이|한식|디저트,query_set_v002,active
-q_rice_cake_03,떡 파는 곳,train,rice_cake,paraphrase,떡을 제조하거나 주로 판매하는 떡집,떡|떡류|떡집,떡볶이|한식|디저트,query_set_v002,active
-q_rice_cake_04,떡 사는 데,train,rice_cake,colloquial,떡을 제조하거나 주로 판매하는 떡집,떡|떡류|떡집,떡볶이|한식|디저트,query_set_v002,active
-q_side_dish_01,반찬,train,side_dish,exact,반찬을 조리·판매하는 반찬가게,반찬|반찬가게|반찬류,한식|식품|일반음식점,query_set_v002,active
-q_side_dish_02,반찬가게,train,side_dish,synonym,반찬을 조리·판매하는 반찬가게,반찬|반찬가게|반찬류,한식|식품|일반음식점,query_set_v002,active
-q_side_dish_03,반찬 파는 곳,train,side_dish,paraphrase,반찬을 조리·판매하는 반찬가게,반찬|반찬가게|반찬류,한식|식품|일반음식점,query_set_v002,active
-q_side_dish_04,반찬 사는 데,train,side_dish,colloquial,반찬을 조리·판매하는 반찬가게,반찬|반찬가게|반찬류,한식|식품|일반음식점,query_set_v002,active
-q_shoes_01,신발,train,shoes,exact,신발을 주로 판매하는 소매 매장,신발|신발판매|구두,신발수선|의류|잡화,query_set_v002,active
-q_shoes_02,신발가게,train,shoes,synonym,신발을 주로 판매하는 소매 매장,신발|신발판매|구두,신발수선|의류|잡화,query_set_v002,active
-q_shoes_03,신발 파는 곳,train,shoes,paraphrase,신발을 주로 판매하는 소매 매장,신발|신발판매|구두,신발수선|의류|잡화,query_set_v002,active
-q_shoes_04,신발 사는 데,train,shoes,colloquial,신발을 주로 판매하는 소매 매장,신발|신발판매|구두,신발수선|의류|잡화,query_set_v002,active
-q_fruit_01,과일,val,fruit,exact,과일·청과를 주로 소매 판매하는 매장,과일|청과|청과물,야채|채소|농산물|마트,query_set_v002,active
-q_fruit_02,청과,val,fruit,synonym,과일·청과를 주로 소매 판매하는 매장,과일|청과|청과물,야채|채소|농산물|마트,query_set_v002,active
-q_fruit_03,과일 파는 곳,val,fruit,paraphrase,과일·청과를 주로 소매 판매하는 매장,과일|청과|청과물,야채|채소|농산물|마트,query_set_v002,active
-q_fruit_04,과일 사는 데,val,fruit,colloquial,과일·청과를 주로 소매 판매하는 매장,과일|청과|청과물,야채|채소|농산물|마트,query_set_v002,active
-q_vegetable_01,채소,val,vegetable,exact,채소·야채를 주로 소매 판매하는 매장,야채|채소|채소류,과일|청과|농산물|마트,query_set_v002,active
-q_vegetable_02,야채가게,val,vegetable,synonym,채소·야채를 주로 소매 판매하는 매장,야채|채소|채소류,과일|청과|농산물|마트,query_set_v002,active
-q_vegetable_03,야채 파는 곳,val,vegetable,paraphrase,채소·야채를 주로 소매 판매하는 매장,야채|채소|채소류,과일|청과|농산물|마트,query_set_v002,active
-q_vegetable_04,채소 사는 데,val,vegetable,colloquial,채소·야채를 주로 소매 판매하는 매장,야채|채소|채소류,과일|청과|농산물|마트,query_set_v002,active
-q_seafood_01,수산물,val,seafood,exact,생선·수산물·해산물을 주로 소매 판매하는 매장,수산물|생선|해산물|수산,횟집|회|일식,query_set_v002,active
-q_seafood_02,생선가게,val,seafood,synonym,생선·수산물·해산물을 주로 소매 판매하는 매장,수산물|생선|해산물|수산,횟집|회|일식,query_set_v002,active
-q_seafood_03,해산물 파는 곳,val,seafood,paraphrase,생선·수산물·해산물을 주로 소매 판매하는 매장,수산물|생선|해산물|수산,횟집|회|일식,query_set_v002,active
-q_seafood_04,수산물 사는 데,val,seafood,colloquial,생선·수산물·해산물을 주로 소매 판매하는 매장,수산물|생선|해산물|수산,횟집|회|일식,query_set_v002,active
-q_books_01,서점,val,books,exact,책·도서·서적을 주로 판매하는 서점,서점|서적|도서|책,문구|독서실|교육,query_set_v002,active
-q_books_02,도서 매장,val,books,synonym,책·도서·서적을 주로 판매하는 서점,서점|서적|도서|책,문구|독서실|교육,query_set_v002,active
-q_books_03,책 파는 곳,val,books,paraphrase,책·도서·서적을 주로 판매하는 서점,서점|서적|도서|책,문구|독서실|교육,query_set_v002,active
-q_books_04,책 사는 데,val,books,colloquial,책·도서·서적을 주로 판매하는 서점,서점|서적|도서|책,문구|독서실|교육,query_set_v002,active
-q_eyewear_01,안경점,val,eyewear,exact,안경·안경렌즈·콘택트렌즈를 판매하거나 맞춰주는 안경점,안경|안경점|안경렌즈|콘택트렌즈,안과|의료서비스,query_set_v002,active
-q_eyewear_02,안경 가게,val,eyewear,synonym,안경·안경렌즈·콘택트렌즈를 판매하거나 맞춰주는 안경점,안경|안경점|안경렌즈|콘택트렌즈,안과|의료서비스,query_set_v002,active
-q_eyewear_03,안경 맞추는 곳,val,eyewear,paraphrase,안경·안경렌즈·콘택트렌즈를 판매하거나 맞춰주는 안경점,안경|안경점|안경렌즈|콘택트렌즈,안과|의료서비스,query_set_v002,active
-q_eyewear_04,렌즈 사는 데,val,eyewear,colloquial,안경·안경렌즈·콘택트렌즈를 판매하거나 맞춰주는 안경점,안경|안경점|안경렌즈|콘택트렌즈,안과|의료서비스,query_set_v002,active
-q_flowers_01,꽃집,val,flowers,exact,생화·꽃다발·화훼류를 주로 판매하는 꽃집,꽃|생화|꽃집|화훼|꽃다발,화분|식물|조경,query_set_v002,active
-q_flowers_02,생화 가게,val,flowers,synonym,생화·꽃다발·화훼류를 주로 판매하는 꽃집,꽃|생화|꽃집|화훼|꽃다발,화분|식물|조경,query_set_v002,active
-q_flowers_03,꽃다발 파는 곳,val,flowers,paraphrase,생화·꽃다발·화훼류를 주로 판매하는 꽃집,꽃|생화|꽃집|화훼|꽃다발,화분|식물|조경,query_set_v002,active
-q_flowers_04,꽃 사는 데,val,flowers,colloquial,생화·꽃다발·화훼류를 주로 판매하는 꽃집,꽃|생화|꽃집|화훼|꽃다발,화분|식물|조경,query_set_v002,active
-q_fitness_01,헬스장,val,fitness,exact,헬스·웨이트 트레이닝을 할 수 있는 체력단련 시설,헬스|헬스장|피트니스|체력단련,필라테스|요가|태권도,query_set_v002,active
-q_fitness_02,피트니스센터,val,fitness,synonym,헬스·웨이트 트레이닝을 할 수 있는 체력단련 시설,헬스|헬스장|피트니스|체력단련,필라테스|요가|태권도,query_set_v002,active
-q_fitness_03,웨이트 운동하는 곳,val,fitness,paraphrase,헬스·웨이트 트레이닝을 할 수 있는 체력단련 시설,헬스|헬스장|피트니스|체력단련,필라테스|요가|태권도,query_set_v002,active
-q_fitness_04,헬스할 데,val,fitness,colloquial,헬스·웨이트 트레이닝을 할 수 있는 체력단련 시설,헬스|헬스장|피트니스|체력단련,필라테스|요가|태권도,query_set_v002,active
-q_stationery_01,문구,val,stationery,exact,문구·학용품을 주로 판매하는 문구점,문구|문구점|학용품,서적|잡화|완구,query_set_v002,active
-q_stationery_02,문구점,val,stationery,synonym,문구·학용품을 주로 판매하는 문구점,문구|문구점|학용품,서적|잡화|완구,query_set_v002,active
-q_stationery_03,학용품 파는 곳,val,stationery,paraphrase,문구·학용품을 주로 판매하는 문구점,문구|문구점|학용품,서적|잡화|완구,query_set_v002,active
-q_stationery_04,문구 사는 데,val,stationery,colloquial,문구·학용품을 주로 판매하는 문구점,문구|문구점|학용품,서적|잡화|완구,query_set_v002,active
-q_chinese_food_01,중식,test,chinese_food,exact,중국식 요리를 조리해 제공하는 음식점,중식|중국집|중식당|중화요리,마라탕|한식|일반음식점,query_set_v002,active
-q_chinese_food_02,중국집,test,chinese_food,synonym,중국식 요리를 조리해 제공하는 음식점,중식|중국집|중식당|중화요리,마라탕|한식|일반음식점,query_set_v002,active
-q_chinese_food_03,중국요리 먹을 곳,test,chinese_food,paraphrase,중국식 요리를 조리해 제공하는 음식점,중식|중국집|중식당|중화요리,마라탕|한식|일반음식점,query_set_v002,active
-q_chinese_food_04,중국음식 먹을 데,test,chinese_food,colloquial,중국식 요리를 조리해 제공하는 음식점,중식|중국집|중식당|중화요리,마라탕|한식|일반음식점,query_set_v002,active
-q_snack_food_01,분식,test,snack_food,exact,김밥·떡볶이 등 분식류를 조리해 제공하는 음식점,분식|분식집|떡볶이|김밥,한식|일반음식점|편의점,query_set_v002,active
-q_snack_food_02,분식집,test,snack_food,synonym,김밥·떡볶이 등 분식류를 조리해 제공하는 음식점,분식|분식집|떡볶이|김밥,한식|일반음식점|편의점,query_set_v002,active
-q_snack_food_03,떡볶이 김밥 파는 곳,test,snack_food,paraphrase,김밥·떡볶이 등 분식류를 조리해 제공하는 음식점,분식|분식집|떡볶이|김밥,한식|일반음식점|편의점,query_set_v002,active
-q_snack_food_04,간단히 분식 먹을 데,test,snack_food,colloquial,김밥·떡볶이 등 분식류를 조리해 제공하는 음식점,분식|분식집|떡볶이|김밥,한식|일반음식점|편의점,query_set_v002,active
-q_japanese_food_01,일식,test,japanese_food,exact,일본식 요리를 조리해 제공하는 음식점,일식|일식집|일본음식|일본요리,중식|한식|횟집,query_set_v002,active
-q_japanese_food_02,일식집,test,japanese_food,synonym,일본식 요리를 조리해 제공하는 음식점,일식|일식집|일본음식|일본요리,중식|한식|횟집,query_set_v002,active
-q_japanese_food_03,일본 음식 먹을 곳,test,japanese_food,paraphrase,일본식 요리를 조리해 제공하는 음식점,일식|일식집|일본음식|일본요리,중식|한식|횟집,query_set_v002,active
-q_japanese_food_04,일식 먹을 데,test,japanese_food,colloquial,일본식 요리를 조리해 제공하는 음식점,일식|일식집|일본음식|일본요리,중식|한식|횟집,query_set_v002,active
-q_icecream_01,아이스크림,test,icecream,exact,아이스크림을 주로 판매하는 매장,아이스크림|아이스크림점,디저트|카페|편의점,query_set_v002,active
-q_icecream_02,아이스크림 가게,test,icecream,synonym,아이스크림을 주로 판매하는 매장,아이스크림|아이스크림점,디저트|카페|편의점,query_set_v002,active
-q_icecream_03,아이스크림 파는 곳,test,icecream,paraphrase,아이스크림을 주로 판매하는 매장,아이스크림|아이스크림점,디저트|카페|편의점,query_set_v002,active
-q_icecream_04,아이스크림 먹을 데,test,icecream,colloquial,아이스크림을 주로 판매하는 매장,아이스크림|아이스크림점,디저트|카페|편의점,query_set_v002,active
-q_dental_01,치과,test,dental,exact,치아·구강 진료를 제공하는 치과 의료기관,치과|치과의원|치과진료,한의원|의료서비스|약국,query_set_v002,active
-q_dental_02,치과의원,test,dental,synonym,치아·구강 진료를 제공하는 치과 의료기관,치과|치과의원|치과진료,한의원|의료서비스|약국,query_set_v002,active
-q_dental_03,치아 치료하는 곳,test,dental,paraphrase,치아·구강 진료를 제공하는 치과 의료기관,치과|치과의원|치과진료,한의원|의료서비스|약국,query_set_v002,active
-q_dental_04,이빨 아플 때 가는 곳,test,dental,colloquial,치아·구강 진료를 제공하는 치과 의료기관,치과|치과의원|치과진료,한의원|의료서비스|약국,query_set_v002,active
-q_oriental_clinic_01,한의원,test,oriental_clinic,exact,한의학 기반 진료·침 치료 등을 제공하는 한의원,한의원|한방|한의학,치과|의료서비스|약국,query_set_v002,active
-q_oriental_clinic_02,한방 진료,test,oriental_clinic,synonym,한의학 기반 진료·침 치료 등을 제공하는 한의원,한의원|한방|한의학,치과|의료서비스|약국,query_set_v002,active
-q_oriental_clinic_03,침 맞는 곳,test,oriental_clinic,paraphrase,한의학 기반 진료·침 치료 등을 제공하는 한의원,한의원|한방|한의학,치과|의료서비스|약국,query_set_v002,active
-q_oriental_clinic_04,한방 치료 받는 데,test,oriental_clinic,colloquial,한의학 기반 진료·침 치료 등을 제공하는 한의원,한의원|한방|한의학,치과|의료서비스|약국,query_set_v002,active
-q_jewelry_01,귀금속,test,jewelry,exact,귀금속·주얼리·금은 제품을 주로 판매하는 매장,귀금속|금은방|주얼리|보석,악세사리|잡화,query_set_v002,active
-q_jewelry_02,금은방,test,jewelry,synonym,귀금속·주얼리·금은 제품을 주로 판매하는 매장,귀금속|금은방|주얼리|보석,악세사리|잡화,query_set_v002,active
-q_jewelry_03,목걸이 반지 파는 곳,test,jewelry,paraphrase,귀금속·주얼리·금은 제품을 주로 판매하는 매장,귀금속|금은방|주얼리|보석,악세사리|잡화,query_set_v002,active
-q_jewelry_04,주얼리 사는 데,test,jewelry,colloquial,귀금속·주얼리·금은 제품을 주로 판매하는 매장,귀금속|금은방|주얼리|보석,악세사리|잡화,query_set_v002,active
-q_bedding_01,침구류,test,bedding,exact,이불·침구류를 주로 판매하는 매장,침구류|이불|침구,의류|가구|잡화,query_set_v002,active
-q_bedding_02,이불가게,test,bedding,synonym,이불·침구류를 주로 판매하는 매장,침구류|이불|침구,의류|가구|잡화,query_set_v002,active
-q_bedding_03,이불 파는 곳,test,bedding,paraphrase,이불·침구류를 주로 판매하는 매장,침구류|이불|침구,의류|가구|잡화,query_set_v002,active
-q_bedding_04,침구 사는 데,test,bedding,colloquial,이불·침구류를 주로 판매하는 매장,침구류|이불|침구,의류|가구|잡화,query_set_v002,active
-q_furniture_01,가구,test,furniture,exact,가구를 주로 판매하는 매장,가구|가구점,침구류|생활용품|인테리어,query_set_v002,active
-q_furniture_02,가구점,test,furniture,synonym,가구를 주로 판매하는 매장,가구|가구점,침구류|생활용품|인테리어,query_set_v002,active
-q_furniture_03,책상 의자 파는 곳,test,furniture,paraphrase,가구를 주로 판매하는 매장,가구|가구점,침구류|생활용품|인테리어,query_set_v002,active
-q_furniture_04,가구 사는 데,test,furniture,colloquial,가구를 주로 판매하는 매장,가구|가구점,침구류|생활용품|인테리어,query_set_v002,active
-q_hamburger_01,햄버거,test,hamburger,exact,햄버거·버거류를 조리해 판매하는 음식점,햄버거|버거|햄버거전문점,토스트|피자|치킨,query_set_v002,active
-q_hamburger_02,버거집,test,hamburger,synonym,햄버거·버거류를 조리해 판매하는 음식점,햄버거|버거|햄버거전문점,토스트|피자|치킨,query_set_v002,active
-q_hamburger_03,햄버거 파는 곳,test,hamburger,paraphrase,햄버거·버거류를 조리해 판매하는 음식점,햄버거|버거|햄버거전문점,토스트|피자|치킨,query_set_v002,active
-q_hamburger_04,버거 먹을 데,test,hamburger,colloquial,햄버거·버거류를 조리해 판매하는 음식점,햄버거|버거|햄버거전문점,토스트|피자|치킨,query_set_v002,active
-q_noodles_01,국수,test,noodles,exact,국수·면요리를 주로 제공하는 음식점,국수|국수집|면류|칼국수,중식|한식|분식,query_set_v002,active
-q_noodles_02,국수집,test,noodles,synonym,국수·면요리를 주로 제공하는 음식점,국수|국수집|면류|칼국수,중식|한식|분식,query_set_v002,active
-q_noodles_03,면요리 먹을 곳,test,noodles,paraphrase,국수·면요리를 주로 제공하는 음식점,국수|국수집|면류|칼국수,중식|한식|분식,query_set_v002,active
-q_noodles_04,면요리 먹을 데,test,noodles,colloquial,국수·면요리를 주로 제공하는 음식점,국수|국수집|면류|칼국수,중식|한식|분식,query_set_v002,active
-q_pork_cutlet_01,돈까스,test,pork_cutlet,exact,돈까스·돈가스를 조리해 제공하는 음식점,돈까스|돈가스,일식|한식|분식,query_set_v002,active
-q_pork_cutlet_02,돈가스집,test,pork_cutlet,synonym,돈까스·돈가스를 조리해 제공하는 음식점,돈까스|돈가스,일식|한식|분식,query_set_v002,active
-q_pork_cutlet_03,돈까스 먹을 곳,test,pork_cutlet,paraphrase,돈까스·돈가스를 조리해 제공하는 음식점,돈까스|돈가스,일식|한식|분식,query_set_v002,active
-q_pork_cutlet_04,돈가스 먹을 데,test,pork_cutlet,colloquial,돈까스·돈가스를 조리해 제공하는 음식점,돈까스|돈가스,일식|한식|분식,query_set_v002,active
-q_dumpling_01,만두,test,dumpling,exact,만두를 주로 판매하거나 제공하는 음식점·매장,만두|만두집,분식|한식|중식,query_set_v002,active
-q_dumpling_02,만두집,test,dumpling,synonym,만두를 주로 판매하거나 제공하는 음식점·매장,만두|만두집,분식|한식|중식,query_set_v002,active
-q_dumpling_03,만두 파는 곳,test,dumpling,paraphrase,만두를 주로 판매하거나 제공하는 음식점·매장,만두|만두집,분식|한식|중식,query_set_v002,active
-q_dumpling_04,만두 먹을 데,test,dumpling,colloquial,만두를 주로 판매하거나 제공하는 음식점·매장,만두|만두집,분식|한식|중식,query_set_v002,active
-q_toast_01,토스트,test,toast,exact,토스트를 주로 조리해 판매하는 음식점·매장,토스트|토스트전문점,햄버거|분식|카페,query_set_v002,active
-q_toast_02,토스트 가게,test,toast,synonym,토스트를 주로 조리해 판매하는 음식점·매장,토스트|토스트전문점,햄버거|분식|카페,query_set_v002,active
-q_toast_03,토스트 파는 곳,test,toast,paraphrase,토스트를 주로 조리해 판매하는 음식점·매장,토스트|토스트전문점,햄버거|분식|카페,query_set_v002,active
-q_toast_04,토스트 먹을 데,test,toast,colloquial,토스트를 주로 조리해 판매하는 음식점·매장,토스트|토스트전문점,햄버거|분식|카페,query_set_v002,active
+q_chicken_01,치킨,train,chicken,exact,조리된 치킨·통닭류를 판매하는 음식점,치킨|통닭|치킨전문점|닭강정,생닭|닭고기|육계,query_set_v003,active
+q_chicken_02,통닭,train,chicken,synonym,조리된 치킨·통닭류를 판매하는 음식점,치킨|통닭|치킨전문점|닭강정,생닭|닭고기|육계,query_set_v003,active
+q_chicken_03,닭튀김 파는 곳,train,chicken,paraphrase,조리된 치킨·통닭류를 판매하는 음식점,치킨|통닭|치킨전문점|닭강정,생닭|닭고기|육계,query_set_v003,active
+q_chicken_04,치킨 먹을 데,train,chicken,colloquial,조리된 치킨·통닭류를 판매하는 음식점,치킨|통닭|치킨전문점|닭강정,생닭|닭고기|육계,query_set_v003,active
+q_cafe_01,카페,train,cafe,exact,커피나 카페 음료를 마실 수 있는 카페·커피전문점,커피|카페|커피전문점|커피숍,원두|스터디카페|음료도매,query_set_v003,active
+q_cafe_02,커피전문점,train,cafe,synonym,커피나 카페 음료를 마실 수 있는 카페·커피전문점,커피|카페|커피전문점|커피숍,원두|스터디카페|음료도매,query_set_v003,active
+q_cafe_03,커피 마실 곳,train,cafe,paraphrase,커피나 카페 음료를 마실 수 있는 카페·커피전문점,커피|카페|커피전문점|커피숍,원두|스터디카페|음료도매,query_set_v003,active
+q_cafe_04,커피 한잔할 데,train,cafe,colloquial,커피나 카페 음료를 마실 수 있는 카페·커피전문점,커피|카페|커피전문점|커피숍,원두|스터디카페|음료도매,query_set_v003,active
+q_hair_01,미용실,train,hair,exact,커트·염색·펌 등 두발 미용 서비스를 제공하는 곳,미용실|두발미용|헤어|미용,피부미용|네일|화장품,query_set_v003,active
+q_hair_02,헤어샵,train,hair,synonym,커트·염색·펌 등 두발 미용 서비스를 제공하는 곳,미용실|두발미용|헤어|미용,피부미용|네일|화장품,query_set_v003,active
+q_hair_03,머리 자르는 곳,train,hair,paraphrase,커트·염색·펌 등 두발 미용 서비스를 제공하는 곳,미용실|두발미용|헤어|미용,피부미용|네일|화장품,query_set_v003,active
+q_hair_04,머리할 데,train,hair,colloquial,커트·염색·펌 등 두발 미용 서비스를 제공하는 곳,미용실|두발미용|헤어|미용,피부미용|네일|화장품,query_set_v003,active
+q_clothing_01,의류 매장,train,clothing,exact,의류·옷을 주로 판매하는 소매 매장,의류|여성의류|남성의류|옷|숙녀복,의류수선|신발|잡화,query_set_v003,active
+q_clothing_02,옷가게,train,clothing,synonym,의류·옷을 주로 판매하는 소매 매장,의류|여성의류|남성의류|옷|숙녀복,의류수선|신발|잡화,query_set_v003,active
+q_clothing_03,옷 파는 곳,train,clothing,paraphrase,의류·옷을 주로 판매하는 소매 매장,의류|여성의류|남성의류|옷|숙녀복,의류수선|신발|잡화,query_set_v003,active
+q_clothing_04,옷 사는 데,train,clothing,colloquial,의류·옷을 주로 판매하는 소매 매장,의류|여성의류|남성의류|옷|숙녀복,의류수선|신발|잡화,query_set_v003,active
+q_pharmacy_01,약국,train,pharmacy,exact,일반 의약품을 판매하는 약국 또는 의약품 소매점,약국|의약품|양약|약,의료서비스|의료기기|한의원,query_set_v003,active
+q_pharmacy_02,의약품 판매점,train,pharmacy,synonym,일반 의약품을 판매하는 약국 또는 의약품 소매점,약국|의약품|양약|약,의료서비스|의료기기|한의원,query_set_v003,active
+q_pharmacy_03,약 사는 곳,train,pharmacy,paraphrase,일반 의약품을 판매하는 약국 또는 의약품 소매점,약국|의약품|양약|약,의료서비스|의료기기|한의원,query_set_v003,active
+q_pharmacy_04,약 파는 데,train,pharmacy,colloquial,일반 의약품을 판매하는 약국 또는 의약품 소매점,약국|의약품|양약|약,의료서비스|의료기기|한의원,query_set_v003,active
+q_butcher_01,정육점,train,butcher,exact,생고기·식육·정육·축산물을 소매 판매하는 곳,정육|정육점|식육|육류|축산물,삼겹살|돼지고기|한식육류|고깃집,query_set_v003,active
+q_butcher_02,식육점,train,butcher,synonym,생고기·식육·정육·축산물을 소매 판매하는 곳,정육|정육점|식육|육류|축산물,삼겹살|돼지고기|한식육류|고깃집,query_set_v003,active
+q_butcher_03,고기 파는 곳,train,butcher,paraphrase,생고기·식육·정육·축산물을 소매 판매하는 곳,정육|정육점|식육|육류|축산물,삼겹살|돼지고기|한식육류|고깃집,query_set_v003,active
+q_butcher_04,생고기 사는 데,train,butcher,colloquial,생고기·식육·정육·축산물을 소매 판매하는 곳,정육|정육점|식육|육류|축산물,삼겹살|돼지고기|한식육류|고깃집,query_set_v003,active
+q_bakery_01,베이커리,train,bakery,exact,빵·제과류를 만들어 판매하거나 주로 판매하는 제과점·베이커리,빵|베이커리|제과|제과점|제과제빵,케이크|디저트|카페,query_set_v003,active
+q_bakery_02,빵집,train,bakery,synonym,빵·제과류를 만들어 판매하거나 주로 판매하는 제과점·베이커리,빵|베이커리|제과|제과점|제과제빵,케이크|디저트|카페,query_set_v003,active
+q_bakery_03,빵 파는 곳,train,bakery,paraphrase,빵·제과류를 만들어 판매하거나 주로 판매하는 제과점·베이커리,빵|베이커리|제과|제과점|제과제빵,케이크|디저트|카페,query_set_v003,active
+q_bakery_04,빵 사는 데,train,bakery,colloquial,빵·제과류를 만들어 판매하거나 주로 판매하는 제과점·베이커리,빵|베이커리|제과|제과점|제과제빵,케이크|디저트|카페,query_set_v003,active
+q_korean_food_01,한식,train,korean_food,exact,한식을 조리해 제공하는 음식점,한식|한식점|한식음식점,일반음식점|분식|중식,query_set_v003,active
+q_korean_food_02,한식집,train,korean_food,synonym,한식을 조리해 제공하는 음식점,한식|한식점|한식음식점,일반음식점|분식|중식,query_set_v003,active
+q_korean_food_03,한식 먹을 곳,train,korean_food,paraphrase,한식을 조리해 제공하는 음식점,한식|한식점|한식음식점,일반음식점|분식|중식,query_set_v003,active
+q_korean_food_04,밥 먹을 한식집,train,korean_food,colloquial,한식을 조리해 제공하는 음식점,한식|한식점|한식음식점,일반음식점|분식|중식,query_set_v003,active
+q_cosmetics_01,화장품,train,cosmetics,exact,화장품을 주로 판매하는 매장,화장품|화장품판매|화장품소매,피부미용|미용실|네일,query_set_v003,active
+q_cosmetics_02,화장품 가게,train,cosmetics,synonym,화장품을 주로 판매하는 매장,화장품|화장품판매|화장품소매,피부미용|미용실|네일,query_set_v003,active
+q_cosmetics_03,화장품 파는 곳,train,cosmetics,paraphrase,화장품을 주로 판매하는 매장,화장품|화장품판매|화장품소매,피부미용|미용실|네일,query_set_v003,active
+q_cosmetics_04,화장품 사는 데,train,cosmetics,colloquial,화장품을 주로 판매하는 매장,화장품|화장품판매|화장품소매,피부미용|미용실|네일,query_set_v003,active
+q_nail_01,네일아트,train,nail,exact,손발톱 네일아트·네일관리 서비스를 제공하는 곳,네일|네일아트|네일샵,피부미용|미용실|화장품,query_set_v003,active
+q_nail_02,네일샵,train,nail,synonym,손발톱 네일아트·네일관리 서비스를 제공하는 곳,네일|네일아트|네일샵,피부미용|미용실|화장품,query_set_v003,active
+q_nail_03,손톱 관리 받는 곳,train,nail,paraphrase,손발톱 네일아트·네일관리 서비스를 제공하는 곳,네일|네일아트|네일샵,피부미용|미용실|화장품,query_set_v003,active
+q_nail_04,네일 받는 데,train,nail,colloquial,손발톱 네일아트·네일관리 서비스를 제공하는 곳,네일|네일아트|네일샵,피부미용|미용실|화장품,query_set_v003,active
+q_pizza_01,피자,train,pizza,exact,피자를 조리해 판매하는 음식점,피자|피자전문점,치킨|햄버거|양식,query_set_v003,active
+q_pizza_02,피자집,train,pizza,synonym,피자를 조리해 판매하는 음식점,피자|피자전문점,치킨|햄버거|양식,query_set_v003,active
+q_pizza_03,피자 파는 곳,train,pizza,paraphrase,피자를 조리해 판매하는 음식점,피자|피자전문점,치킨|햄버거|양식,query_set_v003,active
+q_pizza_04,피자 먹을 데,train,pizza,colloquial,피자를 조리해 판매하는 음식점,피자|피자전문점,치킨|햄버거|양식,query_set_v003,active
+q_rice_cake_01,떡,train,rice_cake,exact,떡을 제조하거나 주로 판매하는 떡집,떡|떡류|떡집,떡볶이|한식|디저트,query_set_v003,active
+q_rice_cake_02,떡집,train,rice_cake,synonym,떡을 제조하거나 주로 판매하는 떡집,떡|떡류|떡집,떡볶이|한식|디저트,query_set_v003,active
+q_rice_cake_03,떡 파는 곳,train,rice_cake,paraphrase,떡을 제조하거나 주로 판매하는 떡집,떡|떡류|떡집,떡볶이|한식|디저트,query_set_v003,active
+q_rice_cake_04,떡 사는 데,train,rice_cake,colloquial,떡을 제조하거나 주로 판매하는 떡집,떡|떡류|떡집,떡볶이|한식|디저트,query_set_v003,active
+q_side_dish_01,반찬,train,side_dish,exact,반찬을 조리·판매하는 반찬가게,반찬|반찬가게|반찬류,한식|식품|일반음식점,query_set_v003,active
+q_side_dish_02,반찬가게,train,side_dish,synonym,반찬을 조리·판매하는 반찬가게,반찬|반찬가게|반찬류,한식|식품|일반음식점,query_set_v003,active
+q_side_dish_03,반찬 파는 곳,train,side_dish,paraphrase,반찬을 조리·판매하는 반찬가게,반찬|반찬가게|반찬류,한식|식품|일반음식점,query_set_v003,active
+q_side_dish_04,반찬 사는 데,train,side_dish,colloquial,반찬을 조리·판매하는 반찬가게,반찬|반찬가게|반찬류,한식|식품|일반음식점,query_set_v003,active
+q_shoes_01,신발,train,shoes,exact,신발을 주로 판매하는 소매 매장,신발|신발판매|구두,신발수선|의류|잡화,query_set_v003,active
+q_shoes_02,신발가게,train,shoes,synonym,신발을 주로 판매하는 소매 매장,신발|신발판매|구두,신발수선|의류|잡화,query_set_v003,active
+q_shoes_03,신발 파는 곳,train,shoes,paraphrase,신발을 주로 판매하는 소매 매장,신발|신발판매|구두,신발수선|의류|잡화,query_set_v003,active
+q_shoes_04,신발 사는 데,train,shoes,colloquial,신발을 주로 판매하는 소매 매장,신발|신발판매|구두,신발수선|의류|잡화,query_set_v003,active
+q_fruit_01,과일,val,fruit,exact,과일·청과를 주로 소매 판매하는 매장,과일|청과|청과물,야채|채소|농산물|마트,query_set_v003,active
+q_fruit_02,청과,val,fruit,synonym,과일·청과를 주로 소매 판매하는 매장,과일|청과|청과물,야채|채소|농산물|마트,query_set_v003,active
+q_fruit_03,과일 파는 곳,val,fruit,paraphrase,과일·청과를 주로 소매 판매하는 매장,과일|청과|청과물,야채|채소|농산물|마트,query_set_v003,active
+q_fruit_04,과일 사는 데,val,fruit,colloquial,과일·청과를 주로 소매 판매하는 매장,과일|청과|청과물,야채|채소|농산물|마트,query_set_v003,active
+q_vegetable_01,채소,val,vegetable,exact,채소·야채를 주로 소매 판매하는 매장,야채|채소|채소류,과일|청과|농산물|마트,query_set_v003,active
+q_vegetable_02,야채가게,val,vegetable,synonym,채소·야채를 주로 소매 판매하는 매장,야채|채소|채소류,과일|청과|농산물|마트,query_set_v003,active
+q_vegetable_03,야채 파는 곳,val,vegetable,paraphrase,채소·야채를 주로 소매 판매하는 매장,야채|채소|채소류,과일|청과|농산물|마트,query_set_v003,active
+q_vegetable_04,채소 사는 데,val,vegetable,colloquial,채소·야채를 주로 소매 판매하는 매장,야채|채소|채소류,과일|청과|농산물|마트,query_set_v003,active
+q_seafood_01,수산물,val,seafood,exact,생선·수산물·해산물을 주로 소매 판매하는 매장,수산물|생선|해산물|수산,횟집|회|일식,query_set_v003,active
+q_seafood_02,생선가게,val,seafood,synonym,생선·수산물·해산물을 주로 소매 판매하는 매장,수산물|생선|해산물|수산,횟집|회|일식,query_set_v003,active
+q_seafood_03,해산물 파는 곳,val,seafood,paraphrase,생선·수산물·해산물을 주로 소매 판매하는 매장,수산물|생선|해산물|수산,횟집|회|일식,query_set_v003,active
+q_seafood_04,수산물 사는 데,val,seafood,colloquial,생선·수산물·해산물을 주로 소매 판매하는 매장,수산물|생선|해산물|수산,횟집|회|일식,query_set_v003,active
+q_books_01,서점,val,books,exact,책·도서·서적을 주로 판매하는 서점,서점|서적|도서|책,문구|독서실|교육,query_set_v003,active
+q_books_02,도서 매장,val,books,synonym,책·도서·서적을 주로 판매하는 서점,서점|서적|도서|책,문구|독서실|교육,query_set_v003,active
+q_books_03,책 파는 곳,val,books,paraphrase,책·도서·서적을 주로 판매하는 서점,서점|서적|도서|책,문구|독서실|교육,query_set_v003,active
+q_books_04,책 사는 데,val,books,colloquial,책·도서·서적을 주로 판매하는 서점,서점|서적|도서|책,문구|독서실|교육,query_set_v003,active
+q_eyewear_01,안경점,val,eyewear,exact,안경·안경렌즈·콘택트렌즈를 판매하거나 맞춰주는 안경점,안경|안경점|안경렌즈|콘택트렌즈,안과|의료서비스,query_set_v003,active
+q_eyewear_02,안경 가게,val,eyewear,synonym,안경·안경렌즈·콘택트렌즈를 판매하거나 맞춰주는 안경점,안경|안경점|안경렌즈|콘택트렌즈,안과|의료서비스,query_set_v003,active
+q_eyewear_03,안경 맞추는 곳,val,eyewear,paraphrase,안경·안경렌즈·콘택트렌즈를 판매하거나 맞춰주는 안경점,안경|안경점|안경렌즈|콘택트렌즈,안과|의료서비스,query_set_v003,active
+q_eyewear_04,렌즈 사는 데,val,eyewear,colloquial,안경·안경렌즈·콘택트렌즈를 판매하거나 맞춰주는 안경점,안경|안경점|안경렌즈|콘택트렌즈,안과|의료서비스,query_set_v003,active
+q_flowers_01,꽃집,val,flowers,exact,생화·꽃다발·화훼류를 주로 판매하는 꽃집,꽃|생화|꽃집|화훼|꽃다발,화분|식물|조경,query_set_v003,active
+q_flowers_02,생화 가게,val,flowers,synonym,생화·꽃다발·화훼류를 주로 판매하는 꽃집,꽃|생화|꽃집|화훼|꽃다발,화분|식물|조경,query_set_v003,active
+q_flowers_03,꽃다발 파는 곳,val,flowers,paraphrase,생화·꽃다발·화훼류를 주로 판매하는 꽃집,꽃|생화|꽃집|화훼|꽃다발,화분|식물|조경,query_set_v003,active
+q_flowers_04,꽃 사는 데,val,flowers,colloquial,생화·꽃다발·화훼류를 주로 판매하는 꽃집,꽃|생화|꽃집|화훼|꽃다발,화분|식물|조경,query_set_v003,active
+q_fitness_01,헬스장,val,fitness,exact,헬스·웨이트 트레이닝을 할 수 있는 체력단련 시설,헬스|헬스장|피트니스|체력단련,필라테스|요가|태권도,query_set_v003,active
+q_fitness_02,피트니스센터,val,fitness,synonym,헬스·웨이트 트레이닝을 할 수 있는 체력단련 시설,헬스|헬스장|피트니스|체력단련,필라테스|요가|태권도,query_set_v003,active
+q_fitness_03,웨이트 운동하는 곳,val,fitness,paraphrase,헬스·웨이트 트레이닝을 할 수 있는 체력단련 시설,헬스|헬스장|피트니스|체력단련,필라테스|요가|태권도,query_set_v003,active
+q_fitness_04,헬스할 데,val,fitness,colloquial,헬스·웨이트 트레이닝을 할 수 있는 체력단련 시설,헬스|헬스장|피트니스|체력단련,필라테스|요가|태권도,query_set_v003,active
+q_stationery_01,문구,val,stationery,exact,문구·학용품을 주로 판매하는 문구점,문구|문구점|학용품,서적|잡화|완구,query_set_v003,active
+q_stationery_02,문구점,val,stationery,synonym,문구·학용품을 주로 판매하는 문구점,문구|문구점|학용품,서적|잡화|완구,query_set_v003,active
+q_stationery_03,학용품 파는 곳,val,stationery,paraphrase,문구·학용품을 주로 판매하는 문구점,문구|문구점|학용품,서적|잡화|완구,query_set_v003,active
+q_stationery_04,문구 사는 데,val,stationery,colloquial,문구·학용품을 주로 판매하는 문구점,문구|문구점|학용품,서적|잡화|완구,query_set_v003,active
+q_chinese_food_01,중식,test,chinese_food,exact,중국식 요리를 조리해 제공하는 음식점,중식|중국집|중식당|중화요리,마라탕|한식|일반음식점,query_set_v003,active
+q_chinese_food_02,중국집,test,chinese_food,synonym,중국식 요리를 조리해 제공하는 음식점,중식|중국집|중식당|중화요리,마라탕|한식|일반음식점,query_set_v003,active
+q_chinese_food_03,중국요리 먹을 곳,test,chinese_food,paraphrase,중국식 요리를 조리해 제공하는 음식점,중식|중국집|중식당|중화요리,마라탕|한식|일반음식점,query_set_v003,active
+q_chinese_food_04,중국음식 먹을 데,test,chinese_food,colloquial,중국식 요리를 조리해 제공하는 음식점,중식|중국집|중식당|중화요리,마라탕|한식|일반음식점,query_set_v003,active
+q_snack_food_01,분식,test,snack_food,exact,김밥·떡볶이 등 분식류를 조리해 제공하는 음식점,분식|분식집|떡볶이|김밥,한식|일반음식점|편의점,query_set_v003,active
+q_snack_food_02,분식집,test,snack_food,synonym,김밥·떡볶이 등 분식류를 조리해 제공하는 음식점,분식|분식집|떡볶이|김밥,한식|일반음식점|편의점,query_set_v003,active
+q_snack_food_03,떡볶이 김밥 파는 곳,test,snack_food,paraphrase,김밥·떡볶이 등 분식류를 조리해 제공하는 음식점,분식|분식집|떡볶이|김밥,한식|일반음식점|편의점,query_set_v003,active
+q_snack_food_04,간단히 분식 먹을 데,test,snack_food,colloquial,김밥·떡볶이 등 분식류를 조리해 제공하는 음식점,분식|분식집|떡볶이|김밥,한식|일반음식점|편의점,query_set_v003,active
+q_japanese_food_01,일식,test,japanese_food,exact,일본식 요리를 조리해 제공하는 음식점,일식|일식집|일본음식|일본요리,중식|한식|횟집,query_set_v003,active
+q_japanese_food_02,일식집,test,japanese_food,synonym,일본식 요리를 조리해 제공하는 음식점,일식|일식집|일본음식|일본요리,중식|한식|횟집,query_set_v003,active
+q_japanese_food_03,일본 음식 먹을 곳,test,japanese_food,paraphrase,일본식 요리를 조리해 제공하는 음식점,일식|일식집|일본음식|일본요리,중식|한식|횟집,query_set_v003,active
+q_japanese_food_04,일식 먹을 데,test,japanese_food,colloquial,일본식 요리를 조리해 제공하는 음식점,일식|일식집|일본음식|일본요리,중식|한식|횟집,query_set_v003,active
+q_icecream_01,아이스크림,test,icecream,exact,아이스크림을 주로 판매하는 매장,아이스크림|아이스크림점,디저트|카페|편의점,query_set_v003,active
+q_icecream_02,아이스크림 가게,test,icecream,synonym,아이스크림을 주로 판매하는 매장,아이스크림|아이스크림점,디저트|카페|편의점,query_set_v003,active
+q_icecream_03,아이스크림 파는 곳,test,icecream,paraphrase,아이스크림을 주로 판매하는 매장,아이스크림|아이스크림점,디저트|카페|편의점,query_set_v003,active
+q_icecream_04,아이스크림 먹을 데,test,icecream,colloquial,아이스크림을 주로 판매하는 매장,아이스크림|아이스크림점,디저트|카페|편의점,query_set_v003,active
+q_dental_01,치과,test,dental,exact,치아·구강 진료를 제공하는 치과 의료기관,치과|치과의원|치과진료,한의원|의료서비스|약국,query_set_v003,active
+q_dental_02,치과의원,test,dental,synonym,치아·구강 진료를 제공하는 치과 의료기관,치과|치과의원|치과진료,한의원|의료서비스|약국,query_set_v003,active
+q_dental_03,치아 치료하는 곳,test,dental,paraphrase,치아·구강 진료를 제공하는 치과 의료기관,치과|치과의원|치과진료,한의원|의료서비스|약국,query_set_v003,active
+q_dental_04,이빨 아플 때 가는 곳,test,dental,colloquial,치아·구강 진료를 제공하는 치과 의료기관,치과|치과의원|치과진료,한의원|의료서비스|약국,query_set_v003,active
+q_oriental_clinic_01,한의원,test,oriental_clinic,exact,한의학 기반 진료·침 치료 등을 제공하는 한의원,한의원|한방|한의학,치과|의료서비스|약국,query_set_v003,active
+q_oriental_clinic_02,한방 진료,test,oriental_clinic,synonym,한의학 기반 진료·침 치료 등을 제공하는 한의원,한의원|한방|한의학,치과|의료서비스|약국,query_set_v003,active
+q_oriental_clinic_03,침 맞는 곳,test,oriental_clinic,paraphrase,한의학 기반 진료·침 치료 등을 제공하는 한의원,한의원|한방|한의학,치과|의료서비스|약국,query_set_v003,active
+q_oriental_clinic_04,한방 치료 받는 데,test,oriental_clinic,colloquial,한의학 기반 진료·침 치료 등을 제공하는 한의원,한의원|한방|한의학,치과|의료서비스|약국,query_set_v003,active
+q_jewelry_01,귀금속,test,jewelry,exact,귀금속·주얼리·금은 제품을 주로 판매하는 매장,귀금속|금은방|주얼리|보석,악세사리|잡화,query_set_v003,active
+q_jewelry_02,금은방,test,jewelry,synonym,귀금속·주얼리·금은 제품을 주로 판매하는 매장,귀금속|금은방|주얼리|보석,악세사리|잡화,query_set_v003,active
+q_jewelry_03,목걸이 반지 파는 곳,test,jewelry,paraphrase,귀금속·주얼리·금은 제품을 주로 판매하는 매장,귀금속|금은방|주얼리|보석,악세사리|잡화,query_set_v003,active
+q_jewelry_04,주얼리 사는 데,test,jewelry,colloquial,귀금속·주얼리·금은 제품을 주로 판매하는 매장,귀금속|금은방|주얼리|보석,악세사리|잡화,query_set_v003,active
+q_bedding_01,침구류,test,bedding,exact,이불·침구류를 주로 판매하는 매장,침구류|이불|침구,의류|가구|잡화,query_set_v003,active
+q_bedding_02,이불가게,test,bedding,synonym,이불·침구류를 주로 판매하는 매장,침구류|이불|침구,의류|가구|잡화,query_set_v003,active
+q_bedding_03,이불 파는 곳,test,bedding,paraphrase,이불·침구류를 주로 판매하는 매장,침구류|이불|침구,의류|가구|잡화,query_set_v003,active
+q_bedding_04,침구 사는 데,test,bedding,colloquial,이불·침구류를 주로 판매하는 매장,침구류|이불|침구,의류|가구|잡화,query_set_v003,active
+q_furniture_01,가구,test,furniture,exact,가구를 주로 판매하는 매장,가구|가구점,침구류|생활용품|인테리어,query_set_v003,active
+q_furniture_02,가구점,test,furniture,synonym,가구를 주로 판매하는 매장,가구|가구점,침구류|생활용품|인테리어,query_set_v003,active
+q_furniture_03,책상 의자 파는 곳,test,furniture,paraphrase,가구를 주로 판매하는 매장,가구|가구점,침구류|생활용품|인테리어,query_set_v003,active
+q_furniture_04,가구 사는 데,test,furniture,colloquial,가구를 주로 판매하는 매장,가구|가구점,침구류|생활용품|인테리어,query_set_v003,active
+q_hamburger_01,햄버거,test,hamburger,exact,햄버거·버거류를 조리해 판매하는 음식점,햄버거|버거|햄버거전문점,토스트|피자|치킨,query_set_v003,active
+q_hamburger_02,버거집,test,hamburger,synonym,햄버거·버거류를 조리해 판매하는 음식점,햄버거|버거|햄버거전문점,토스트|피자|치킨,query_set_v003,active
+q_hamburger_03,햄버거 파는 곳,test,hamburger,paraphrase,햄버거·버거류를 조리해 판매하는 음식점,햄버거|버거|햄버거전문점,토스트|피자|치킨,query_set_v003,active
+q_hamburger_04,버거 먹을 데,test,hamburger,colloquial,햄버거·버거류를 조리해 판매하는 음식점,햄버거|버거|햄버거전문점,토스트|피자|치킨,query_set_v003,active
+q_noodles_01,국수,test,noodles,exact,국수·면요리를 주로 제공하는 음식점,국수|국수집|면류|칼국수,중식|한식|분식,query_set_v003,active
+q_noodles_02,국수집,test,noodles,synonym,국수·면요리를 주로 제공하는 음식점,국수|국수집|면류|칼국수,중식|한식|분식,query_set_v003,active
+q_noodles_03,면요리 먹을 곳,test,noodles,paraphrase,국수·면요리를 주로 제공하는 음식점,국수|국수집|면류|칼국수,중식|한식|분식,query_set_v003,active
+q_noodles_04,면요리 먹을 데,test,noodles,colloquial,국수·면요리를 주로 제공하는 음식점,국수|국수집|면류|칼국수,중식|한식|분식,query_set_v003,active
+q_pork_cutlet_01,돈까스,test,pork_cutlet,exact,돈까스·돈가스를 조리해 제공하는 음식점,돈까스|돈가스,일식|한식|분식,query_set_v003,active
+q_pork_cutlet_02,돈가스집,test,pork_cutlet,synonym,돈까스·돈가스를 조리해 제공하는 음식점,돈까스|돈가스,일식|한식|분식,query_set_v003,active
+q_pork_cutlet_03,돈까스 먹을 곳,test,pork_cutlet,paraphrase,돈까스·돈가스를 조리해 제공하는 음식점,돈까스|돈가스,일식|한식|분식,query_set_v003,active
+q_pork_cutlet_04,돈가스 먹을 데,test,pork_cutlet,colloquial,돈까스·돈가스를 조리해 제공하는 음식점,돈까스|돈가스,일식|한식|분식,query_set_v003,active
+q_dumpling_01,만두,test,dumpling,exact,만두를 주로 판매하거나 제공하는 음식점·매장,만두|만두집,분식|한식|중식,query_set_v003,active
+q_dumpling_02,만두집,test,dumpling,synonym,만두를 주로 판매하거나 제공하는 음식점·매장,만두|만두집,분식|한식|중식,query_set_v003,active
+q_dumpling_03,만두 파는 곳,test,dumpling,paraphrase,만두를 주로 판매하거나 제공하는 음식점·매장,만두|만두집,분식|한식|중식,query_set_v003,active
+q_dumpling_04,만두 먹을 데,test,dumpling,colloquial,만두를 주로 판매하거나 제공하는 음식점·매장,만두|만두집,분식|한식|중식,query_set_v003,active
+q_toast_01,토스트,test,toast,exact,토스트를 주로 조리해 판매하는 음식점·매장,토스트|토스트전문점,햄버거|분식|카페,query_set_v003,active
+q_toast_02,토스트 가게,test,toast,synonym,토스트를 주로 조리해 판매하는 음식점·매장,토스트|토스트전문점,햄버거|분식|카페,query_set_v003,active
+q_toast_03,토스트 파는 곳,test,toast,paraphrase,토스트를 주로 조리해 판매하는 음식점·매장,토스트|토스트전문점,햄버거|분식|카페,query_set_v003,active
+q_toast_04,토스트 먹을 데,test,toast,colloquial,토스트를 주로 조리해 판매하는 음식점·매장,토스트|토스트전문점,햄버거|분식|카페,query_set_v003,active
+q_academy_01,학원,train,academy,exact,음악·미술·외국어·스포츠 등 각종 교습을 제공하는 학원,학원|음악학원|미술학원|피아노학원|외국어학원|영어학원|태권도학원|컴퓨터학원,교습소|공부방|어린이집,query_set_v003,active
+q_academy_02,교습소,train,academy,synonym,음악·미술·외국어·스포츠 등 각종 교습을 제공하는 학원,학원|음악학원|미술학원|피아노학원|외국어학원|영어학원|태권도학원|컴퓨터학원,교습소|공부방|어린이집,query_set_v003,active
+q_academy_03,배우러 다니는 곳,train,academy,paraphrase,음악·미술·외국어·스포츠 등 각종 교습을 제공하는 학원,학원|음악학원|미술학원|피아노학원|외국어학원|영어학원|태권도학원|컴퓨터학원,교습소|공부방|어린이집,query_set_v003,active
+q_academy_04,학원 다니는 데,train,academy,colloquial,음악·미술·외국어·스포츠 등 각종 교습을 제공하는 학원,학원|음악학원|미술학원|피아노학원|외국어학원|영어학원|태권도학원|컴퓨터학원,교습소|공부방|어린이집,query_set_v003,active
+q_gas_station_01,주유소,test,gas_station,exact,자동차 등에 주유(연료 판매)하는 주유소,주유소|주유,세차장|자동차정비|자동차용품,query_set_v003,active
+q_gas_station_02,기름 넣는 곳,test,gas_station,synonym,자동차 등에 주유(연료 판매)하는 주유소,주유소|주유,세차장|자동차정비|자동차용품,query_set_v003,active
+q_gas_station_03,차에 기름 넣을 수 있는 곳,test,gas_station,paraphrase,자동차 등에 주유(연료 판매)하는 주유소,주유소|주유,세차장|자동차정비|자동차용품,query_set_v003,active
+q_gas_station_04,기름 넣으러 갈 데,test,gas_station,colloquial,자동차 등에 주유(연료 판매)하는 주유소,주유소|주유,세차장|자동차정비|자동차용품,query_set_v003,active

@@ -14,14 +14,18 @@ def load_yaml(path: str | Path) -> dict:
 def read_excel_sheets(
     path: str | Path,
     sheet_config: dict,
-) -> list[tuple[str, str, pd.DataFrame]]:
+) -> list[tuple[str, str | None, pd.DataFrame]]:
     """
     Excel 파일에서 설정된 시트를 읽는다.
+
+    각 시트 설정에 `source_region`이 있으면 그 고정값을 그대로 쓰고(레거시 다중
+    시트 파일 지원), 없으면 `None`을 반환해 호출부(canonicalize)가 주소에서
+    행 단위로 지역을 파생하도록 한다.
 
     Returns
     -------
     [
-        (sheet_name, source_region, dataframe),
+        (sheet_name, source_region_or_None, dataframe),
         ...
     ]
     """
@@ -52,7 +56,7 @@ def read_excel_sheets(
             engine="openpyxl",
         )
 
-        source_region = config["source_region"]
+        source_region = (config or {}).get("source_region")
 
         results.append(
             (

@@ -1,4 +1,7 @@
-query_set_version: query_set_v002
+query_set_version: query_set_v003
+# gas_station, academy 2개 family는 전국 데이터 전환 + 파이프라인이 끝까지
+# 도는지 확인하기 위한 임시 추가분입니다. 실제 최종 query family 구성은
+# 팀 회의로 다시 정합니다 (docs/EXTENDING_DATA.md 참고).
 families:
 - family: chicken
   split: train
@@ -736,3 +739,47 @@ families:
     text: 토스트 파는 곳
   - type: colloquial
     text: 토스트 먹을 데
+- family: academy
+  split: train
+  intent_definition: 음악·미술·외국어·스포츠 등 각종 교습을 제공하는 학원
+  positive_terms:
+  - 학원
+  - 음악학원
+  - 미술학원
+  - 피아노학원
+  - 외국어학원
+  - 영어학원
+  - 태권도학원
+  - 컴퓨터학원
+  boundary_terms:
+  - 교습소
+  - 공부방
+  - 어린이집
+  queries:
+  - type: exact
+    text: 학원
+  - type: synonym
+    text: 교습소
+  - type: paraphrase
+    text: 배우러 다니는 곳
+  - type: colloquial
+    text: 학원 다니는 데
+- family: gas_station
+  split: test
+  intent_definition: 자동차 등에 주유(연료 판매)하는 주유소
+  positive_terms:
+  - 주유소
+  - 주유
+  boundary_terms:
+  - 세차장
+  - 자동차정비
+  - 자동차용품
+  queries:
+  - type: exact
+    text: 주유소
+  - type: synonym
+    text: 기름 넣는 곳
+  - type: paraphrase
+    text: 차에 기름 넣을 수 있는 곳
+  - type: colloquial
+    text: 기름 넣으러 갈 데

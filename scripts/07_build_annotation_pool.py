@@ -32,20 +32,44 @@ def item_parts(value: object) -> list[str]:
     return [x.strip() for x in SEP_RE.split(str(value)) if x.strip()]
 
 
-def targeted_match_mask(corpus: pd.DataFrame, term: str) -> np.ndarray:
+def precompute_match_index(
+    corpus: pd.DataFrame,
+) -> tuple[list[list[str]], list[str]]:
+    """corpus 1회 순회로 정규화된 item parts / store_name을 미리 만들어 둔다.
+
+    원래 구현은 term(positive/boundary term) 마다 매번 corpus 전체를 다시
+    파싱했다 — query family 수 x term 수가 늘어나면(주유소/학원 등 추가) 그만큼
+    반복 비용이 곱해진다. item_text 파싱은 term과 무관하므로 한 번만 하면 된다.
+    """
+
+    item_parts_list = [
+        [normalize(part) for part in item_parts(value)]
+        for value in corpus["item_text"]
+    ]
+
+    store_name_norm = [
+        normalize(value) for value in corpus["store_name"]
+    ]
+
+    return item_parts_list, store_name_norm
+
+
+def targeted_match_mask(
+    item_parts_list: list[list[str]],
+    store_name_norm: list[str],
+    term: str,
+) -> np.ndarray:
     """Coverage-only channel. Prefer item components; use store name only if item is missing."""
     t = normalize(term)
-    result = np.zeros(len(corpus), dtype=bool)
-    for i, row in enumerate(corpus.itertuples(index=False)):
-        parts = item_parts(getattr(row, "item_text", None))
+    result = np.zeros(len(item_parts_list), dtype=bool)
+    for i, parts in enumerate(item_parts_list):
         matched = False
-        for part in parts:
-            p = normalize(part)
+        for p in parts:
             if p and t and (p == t or t in p or (len(p) >= 2 and p in t)):
                 matched = True
                 break
         if not parts:
-            s = normalize(getattr(row, "store_name", None))
+            s = store_name_norm[i]
             if len(t) >= 2 and t in s:
                 matched = True
         result[i] = matched
@@ -118,10 +142,13 @@ def main() -> None:
             {"rank": int(r.rank), "score": float(r.score)})
 
     # Hidden targeted coverage channels; never part of a model score.
+    item_parts_list, store_name_norm = precompute_match_index(corpus)
     for q in queries.itertuples(index=False):
         for kind, raw_terms in [("positive", q.pool_positive_terms), ("boundary", q.pool_boundary_terms)]:
             for term in split_terms(raw_terms):
-                idxs = np.flatnonzero(targeted_match_mask(corpus, term))
+                idxs = np.flatnonzero(
+                    targeted_match_mask(item_parts_list, store_name_norm, term)
+                )
                 idxs = sorted(idxs, key=lambda i: str(corpus.iloc[i]["doc_id"]))[:targeted_per_term]
                 for idx in idxs:
                     add(str(q.query_id), str(corpus.iloc[idx]["doc_id"]),

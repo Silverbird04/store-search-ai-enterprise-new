@@ -137,17 +137,19 @@ def main():
 
     parser.add_argument(
         "--records-output",
-        default=(
-            "data/interim/"
-            "store_records_v002.parquet"
+        default=None,
+        help=(
+            "기본값: data/interim/store_records_"
+            "{dataset_version}.parquet"
         ),
     )
 
     parser.add_argument(
         "--output",
-        default=(
-            "data/processed/"
-            "stores_master_v002.parquet"
+        default=None,
+        help=(
+            "기본값: data/processed/stores_master_"
+            "{dataset_version}.parquet"
         ),
     )
 
@@ -161,9 +163,10 @@ def main():
 
     parser.add_argument(
         "--report",
-        default=(
-            "artifacts/reports/"
-            "preprocess_summary_v002.json"
+        default=None,
+        help=(
+            "기본값: artifacts/reports/preprocess_summary_"
+            "{dataset_version}.json"
         ),
     )
 
@@ -184,6 +187,23 @@ def main():
             "sheets"
         ]
     )
+
+    dataset_version = config["dataset_version"]
+
+    if args.records_output is None:
+        args.records_output = (
+            f"data/interim/store_records_{dataset_version}.parquet"
+        )
+
+    if args.output is None:
+        args.output = (
+            f"data/processed/stores_master_{dataset_version}.parquet"
+        )
+
+    if args.report is None:
+        args.report = (
+            f"artifacts/reports/preprocess_summary_{dataset_version}.json"
+        )
 
     # --------------------------------------------------
     # Excel 읽기
@@ -319,10 +339,7 @@ def main():
 
         duplicates.to_parquet(
             report_path.parent
-            / (
-                "duplicate_candidates_"
-                "v002.parquet"
-            ),
+            / f"duplicate_candidates_{dataset_version}.parquet",
             index=False,
         )
 
@@ -417,7 +434,7 @@ def main():
 
         merge_conflicts.to_csv(
             report_path.parent
-            / "master_merge_conflicts_v002.csv",
+            / f"master_merge_conflicts_{dataset_version}.csv",
             index=False,
             encoding="utf-8-sig",
         )

@@ -1,0 +1,15 @@
+{
+  "corpus_version": "store_corpus_v002",
+  "dataset_version": "stores_v003",
+  "source_dataset": "data\\processed\\stores_master_stores_v003.parquet",
+  "documents": 214043,
+  "unique_doc_ids": 214043,
+  "missing_item_documents": 18186,
+  "geo_missing_documents": 281,
+  "templates": {
+    "t1_minimal": "가맹점명 + 취급품목",
+    "t2_market": "가맹점명 + 시장명 + 취급품목",
+    "t3_market_type": "가맹점명 + 시장명 + 시장유형 + 취급품목"
+  },
+  "primary_template": null
+}

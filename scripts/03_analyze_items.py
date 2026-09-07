@@ -7,6 +7,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from store_search_ai.pipeline.common import load_config
+
 
 HTML_ENTITY_RE = re.compile(
     r"&(?:[A-Za-z]+|#\d+);"
@@ -48,22 +50,31 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
+        "--config",
+        default="configs/data/default.yaml",
+    )
+
+    parser.add_argument(
         "--input",
-        default=(
-            "data/processed/"
-            "stores_master_v002.parquet"
-        ),
+        default=None,
+        help="기본값: data/processed/stores_master_{dataset_version}.parquet",
     )
 
     parser.add_argument(
         "--output-dir",
-        default=(
-            "artifacts/reports/"
-            "item_analysis_v002"
-        ),
+        default=None,
+        help="기본값: artifacts/reports/item_analysis_{dataset_version}",
     )
 
     args = parser.parse_args()
+
+    dataset_version = load_config(args.config)["dataset_version"]
+
+    if args.input is None:
+        args.input = f"data/processed/stores_master_{dataset_version}.parquet"
+
+    if args.output_dir is None:
+        args.output_dir = f"artifacts/reports/item_analysis_{dataset_version}"
 
     input_path = Path(
         args.input
@@ -141,7 +152,7 @@ def main():
 
     token_counts.to_csv(
         output_dir
-        / "item_token_counts_v002.csv",
+        / f"item_token_counts_{dataset_version}.csv",
         index=False,
         encoding="utf-8-sig",
     )
@@ -166,7 +177,7 @@ def main():
 
     raw_counts.to_csv(
         output_dir
-        / "item_raw_counts_v002.csv",
+        / f"item_raw_counts_{dataset_version}.csv",
         index=False,
         encoding="utf-8-sig",
     )
@@ -201,7 +212,7 @@ def main():
 
     regional_counts.to_csv(
         output_dir
-        / "item_token_counts_by_region_v002.csv",
+        / f"item_token_counts_by_region_{dataset_version}.csv",
         index=False,
         encoding="utf-8-sig",
     )
@@ -225,7 +236,7 @@ def main():
 
     missing_items.to_csv(
         output_dir
-        / "missing_item_stores_v002.csv",
+        / f"missing_item_stores_{dataset_version}.csv",
         index=False,
         encoding="utf-8-sig",
     )
@@ -251,7 +262,7 @@ def main():
 
         item_conflicts.to_csv(
             output_dir
-            / "item_conflict_stores_v002.csv",
+            / f"item_conflict_stores_{dataset_version}.csv",
             index=False,
             encoding="utf-8-sig",
         )
@@ -292,7 +303,7 @@ def main():
 
     long_items.to_csv(
         output_dir
-        / "long_item_values_v002.csv",
+        / f"long_item_values_{dataset_version}.csv",
         index=False,
         encoding="utf-8-sig",
     )
@@ -322,7 +333,7 @@ def main():
 
     unbalanced_items.to_csv(
         output_dir
-        / "unbalanced_parentheses_v002.csv",
+        / f"unbalanced_parentheses_{dataset_version}.csv",
         index=False,
         encoding="utf-8-sig",
     )
@@ -354,7 +365,7 @@ def main():
 
     html_items.to_csv(
         output_dir
-        / "html_entity_items_v002.csv",
+        / f"html_entity_items_{dataset_version}.csv",
         index=False,
         encoding="utf-8-sig",
     )
@@ -387,7 +398,7 @@ def main():
 
     clean_html_items.to_csv(
         output_dir
-        / "clean_html_entity_items_v002.csv",
+        / f"clean_html_entity_items_{dataset_version}.csv",
         index=False,
         encoding="utf-8-sig",
     )
@@ -450,7 +461,7 @@ def main():
 
     low_information_tokens.to_csv(
         output_dir
-        / "low_information_tokens_v002.csv",
+        / f"low_information_tokens_{dataset_version}.csv",
         index=False,
         encoding="utf-8-sig",
     )
@@ -664,7 +675,7 @@ def main():
 
     summary_path = (
         output_dir
-        / "item_analysis_summary_v002.json"
+        / f"item_analysis_summary_{dataset_version}.json"
     )
 
     summary_path.write_text(

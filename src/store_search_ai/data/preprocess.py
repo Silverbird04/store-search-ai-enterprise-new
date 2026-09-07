@@ -18,13 +18,17 @@ from .items import (
     has_ambiguous_suffix,
 )
 
+from .region import (
+    derive_region_series,
+)
+
 
 def canonicalize(
     df: pd.DataFrame,
     config: dict,
     source_file: str,
     source_sheet: str,
-    source_region: str,
+    source_region: str | None,
 ) -> pd.DataFrame:
 
     # --------------------------------------------------
@@ -89,12 +93,31 @@ def canonicalize(
 
     out["source_file"] = source_file
     out["source_sheet"] = source_sheet
-    out["source_region"] = source_region
 
-    out["source_row_no"] = pd.to_numeric(
+    # 새 전국 데이터처럼 "No." 컬럼 자체가 없는 경우도 있다.
+    # 그런 경우(또는 값이 결측인 경우) 시트 내 순서를 1부터
+    # 매겨 source_record_key가 항상 유일하도록 보정한다.
+    row_no = pd.to_numeric(
         w["source_row_no_raw"],
         errors="coerce",
-    ).astype("Int64")
+    )
+
+    missing_row_no = row_no.isna()
+
+    if missing_row_no.any():
+
+        positional = pd.Series(
+            range(1, len(w) + 1),
+            index=w.index,
+            dtype="Float64",
+        )
+
+        row_no = row_no.where(
+            ~missing_row_no,
+            positional,
+        )
+
+    out["source_row_no"] = row_no.astype("Int64")
 
     out["source_record_key"] = (
         source_file
@@ -177,6 +200,29 @@ def canonicalize(
             ]
         )
     )
+
+    # --------------------------------------------------
+    # 5b. 지역(시도) 판별
+    #
+    # 시트에 source_region이 고정값으로 주어지면(레거시 다중 시트 파일)
+    # 그 값을 그대로 쓰고, 없으면(전국 단일 시트) 정제된 주소에서
+    # 시도를 파생한다.
+    # --------------------------------------------------
+
+    if source_region is not None:
+
+        out["source_region"] = source_region
+        out["source_region_status"] = "VALID"
+
+    else:
+
+        region, region_status = derive_region_series(
+            out["address"],
+            config["region_aliases"],
+        )
+
+        out["source_region"] = region
+        out["source_region_status"] = region_status
 
     # --------------------------------------------------
     # 6. 좌표 처리

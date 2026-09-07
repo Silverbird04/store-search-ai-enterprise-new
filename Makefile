@@ -7,9 +7,10 @@
 # 앞단계만 다시 돌립니다 — docs/PIPELINE.md의 실행 순서를 사람이 손으로 따라가지
 # 않아도 되게 하기 위한 것입니다.
 #
-# 08 단계부터는 실제 사람이 애노테이션/adjudication을 해야 하므로 make로 자동화할
-# 수 없습니다. 대신 "사람이 만들어야 할 파일이 없으면 무엇을 해야 하는지" 안내하는
-# 가드 타겟을 제공합니다 (make calibration-v1-merge 등).
+# 08번(train qrels 자동 라벨링)은 사람 개입 없이 그대로 실행됩니다. 09번부터는
+# val/test를 실제 사람이 애노테이션/adjudication해야 하므로 make로 자동화할 수
+# 없습니다. 대신 "사람이 만들어야 할 파일이 없으면 무엇을 해야 하는지" 안내하는
+# 가드 타겟을 제공합니다 (make full-annotation-sheets 등).
 #
 # 사용 예:
 #   make corpus              # 01~04 중 필요한 것만 재실행해서 corpus까지 최신화
@@ -23,21 +24,23 @@ SCRIPTS := scripts
 CONFIG_DATA := configs/data/default.yaml
 CONFIG_BENCH := configs/benchmark/storesearch_ko_v1.yaml
 FAMILIES := configs/benchmark/query_families_v1.yaml
-RAW := data/raw/stores.xlsx
+RAW := data/raw/stores_20260907.xlsx
+DATASET_VERSION := stores_v003
+CORPUS_VERSION := store_corpus_v002
 
 .PHONY: all profile preprocess analyze corpus benchmark-init lexical-runs pool \
-        validate validate-final evaluate \
-        calibration-v1-sheets calibration-v1-merge calibration-v2-sheets calibration-v2-merge \
+        auto-label-train validate validate-final evaluate \
         full-annotation-sheets prepare-full-annotations apply-adjudication build-qrels \
         clean-derived help
 
 help:
 	@echo "make corpus            01~04 (전처리~corpus) 재실행"
 	@echo "make pool              01~07 (corpus~lexical pooling) 재실행"
+	@echo "make auto-label-train  08 (train qrels 자동 라벨링, weak supervision) 재실행"
 	@echo "make validate          benchmark 무결성 검증 (pilot)"
 	@echo "make validate-final    benchmark 무결성 검증 (final, double-annotation coverage 등 포함)"
-	@echo "make evaluate RUN=... TAG=...   16_evaluate_run.py 실행"
-	@echo "사람이 개입해야 하는 단계(calibration/annotation/adjudication)는 docs/PIPELINE.md 4~6절 참고"
+	@echo "make evaluate RUN=... TAG=...   14_evaluate_run.py 실행"
+	@echo "사람이 개입해야 하는 단계(val/test annotation/adjudication)는 docs/PIPELINE.md 참고"
 
 # ---------- 01: profile (재실행은 자유, 다른 산출물의 선행조건은 아님) ----------
 
@@ -48,22 +51,22 @@ profile: artifacts/reports/data_profile.json
 
 # ---------- 02: preprocess ----------
 
-data/processed/stores_master_v002.parquet: $(RAW) $(CONFIG_DATA)
+data/processed/stores_master_$(DATASET_VERSION).parquet: $(RAW) $(CONFIG_DATA)
 	$(PY) $(SCRIPTS)/02_preprocess_data.py --input $(RAW) --config $(CONFIG_DATA)
 
-preprocess: data/processed/stores_master_v002.parquet
+preprocess: data/processed/stores_master_$(DATASET_VERSION).parquet
 
 # ---------- 03: item 분석 (정보성 리포트 — corpus 빌드의 필수 선행조건 아님) ----------
 
-analyze: data/processed/stores_master_v002.parquet
+analyze: data/processed/stores_master_$(DATASET_VERSION).parquet
 	$(PY) $(SCRIPTS)/03_analyze_items.py
 
 # ---------- 04: corpus ----------
 
-data/corpus/store_corpus_v001.parquet: data/processed/stores_master_v002.parquet
-	$(PY) $(SCRIPTS)/04_build_corpus.py
+data/corpus/$(CORPUS_VERSION).parquet: data/processed/stores_master_$(DATASET_VERSION).parquet
+	$(PY) $(SCRIPTS)/04_build_corpus.py --config $(CONFIG_BENCH)
 
-corpus: data/corpus/store_corpus_v001.parquet
+corpus: data/corpus/$(CORPUS_VERSION).parquet
 
 # ---------- 05: query set 초기화 ----------
 
@@ -74,7 +77,7 @@ benchmark-init: benchmark/storesearch_ko_v1/queries.csv
 
 # ---------- 06: lexical pooling runs ----------
 
-benchmark/storesearch_ko_v1/runs/pooling/lexical_run_manifest.json: data/corpus/store_corpus_v001.parquet benchmark/storesearch_ko_v1/queries.csv
+benchmark/storesearch_ko_v1/runs/pooling/lexical_run_manifest.json: data/corpus/$(CORPUS_VERSION).parquet benchmark/storesearch_ko_v1/queries.csv
 	$(PY) $(SCRIPTS)/06_generate_lexical_runs.py --config $(CONFIG_BENCH)
 
 lexical-runs: benchmark/storesearch_ko_v1/runs/pooling/lexical_run_manifest.json
@@ -86,61 +89,51 @@ benchmark/storesearch_ko_v1/candidate_pool_internal.csv: benchmark/storesearch_k
 
 pool: benchmark/storesearch_ko_v1/candidate_pool_internal.csv
 
-# ---------- 15: 벤치마크 무결성 검증 ----------
+# ---------- 08: train qrels 자동 라벨링 (weak supervision, 사람 개입 없음) ----------
+
+benchmark/storesearch_ko_v1/qrels/provisional_v1/qrels_train_provisional.csv: pool
+	$(PY) $(SCRIPTS)/08_auto_label_train_qrels.py --config $(CONFIG_BENCH)
+
+auto-label-train: benchmark/storesearch_ko_v1/qrels/provisional_v1/qrels_train_provisional.csv
+
+# ---------- 13: 벤치마크 무결성 검증 ----------
 
 validate: corpus benchmark-init
-	$(PY) $(SCRIPTS)/15_validate_benchmark.py --config $(CONFIG_BENCH) --stage pilot
+	$(PY) $(SCRIPTS)/13_validate_benchmark.py --config $(CONFIG_BENCH) --stage pilot
 
 validate-final: corpus benchmark-init
-	$(PY) $(SCRIPTS)/15_validate_benchmark.py --config $(CONFIG_BENCH) --stage final
+	$(PY) $(SCRIPTS)/13_validate_benchmark.py --config $(CONFIG_BENCH) --stage final
 
-# ---------- 16: 평가 (사람이 만든 run.csv 필요) ----------
+# ---------- 14: 평가 (사람이 만든 run.csv 필요) ----------
 
 evaluate:
 	@test -n "$(RUN)" || (echo "make evaluate RUN=<run.csv> TAG=<experiment_name> 형식으로 호출하세요" && exit 1)
 	@test -n "$(TAG)" || (echo "make evaluate RUN=<run.csv> TAG=<experiment_name> 형식으로 호출하세요" && exit 1)
-	$(PY) $(SCRIPTS)/16_evaluate_run.py --run $(RUN) --tag $(TAG)
+	$(PY) $(SCRIPTS)/14_evaluate_run.py --run $(RUN) --tag $(TAG)
 
 # ============================================================
-# 08~14: 사람 개입 구간 — 자동 실행 대신 가드 + 안내만 제공
-# 자세한 절차는 docs/PIPELINE.md 4~6절 참고
+# 09~12: val/test 사람 개입 구간 — 자동 실행 대신 가드 + 안내만 제공
+# 자세한 절차는 docs/PIPELINE.md 참고. train은 08번이 자동으로 처리한다.
 # ============================================================
 
 ANNOT_DIR := benchmark/storesearch_ko_v1/annotations/full_annotation_v1
-CALIB_DIR := benchmark/storesearch_ko_v1/calibration
-
-calibration-v1-sheets: pool
-	$(PY) $(SCRIPTS)/08_make_calibration_v1_sheets.py --config $(CONFIG_BENCH)
-	@echo ">> $(CALIB_DIR)/calibration_A_v1.csv, calibration_B_v1.csv 를 두 명의 애노테이터에게 전달하세요."
-
-calibration-v1-merge:
-	@test -f "$(A)" || (echo "make calibration-v1-merge A=<완료된 calibration_A_v1.csv> B=<완료된 calibration_B_v1.csv>" && exit 1)
-	@test -f "$(B)" || (echo "make calibration-v1-merge A=<완료된 calibration_A_v1.csv> B=<완료된 calibration_B_v1.csv>" && exit 1)
-	$(PY) $(SCRIPTS)/09_merge_calibration_annotations.py --config $(CONFIG_BENCH) --a $(A) --b $(B)
-
-calibration-v2-sheets:
-	@test -n "$(PREV_A)" || (echo "make calibration-v2-sheets PREV_A=<완료된 calibration_A_v1.csv>" && exit 1)
-	$(PY) $(SCRIPTS)/10_make_calibration_v2_sheets.py --config $(CONFIG_BENCH) --previous-a $(PREV_A)
-	@echo ">> $(CALIB_DIR)/calibration_A_v2.csv, calibration_B_v2.csv 를 전달하세요."
-
-calibration-v2-merge: calibration-v1-merge
 
 full-annotation-sheets: pool
-	$(PY) $(SCRIPTS)/11_make_full_annotation_sheets.py --config $(CONFIG_BENCH)
-	@echo ">> $(ANNOT_DIR)/annotation_A_{train,val,test}.csv, annotation_B_{val,test}.csv 를 전달하세요."
+	$(PY) $(SCRIPTS)/09_make_full_annotation_sheets.py --config $(CONFIG_BENCH)
+	@echo ">> $(ANNOT_DIR)/annotation_A_{val,test}.csv, annotation_B_{val,test}.csv 를 전달하세요."
 	@echo ">> 회수한 파일은 $(ANNOT_DIR)/completed/*_completed.csv 로 저장하세요."
 
 prepare-full-annotations:
-	@test -d "$(ANNOT_DIR)/completed" || (echo "$(ANNOT_DIR)/completed/ 에 5개 *_completed.csv 파일이 필요합니다 (docs/PIPELINE.md 5절)" && exit 1)
-	$(PY) $(SCRIPTS)/12_prepare_full_annotations.py --config $(CONFIG_BENCH)
+	@test -d "$(ANNOT_DIR)/completed" || (echo "$(ANNOT_DIR)/completed/ 에 4개 *_completed.csv 파일이 필요합니다 (docs/PIPELINE.md 참고)" && exit 1)
+	$(PY) $(SCRIPTS)/10_prepare_full_annotations.py --config $(CONFIG_BENCH)
 	@echo ">> $(ANNOT_DIR)/analysis/adjudication_val_test_needed_only.csv 를 조정자에게 전달하세요."
 
 apply-adjudication:
 	@test -n "$(PATCH)" || (echo "make apply-adjudication PATCH=<완료된 adjudication_val_test_needed_only_completed.csv>" && exit 1)
-	$(PY) $(SCRIPTS)/13_apply_adjudication_patch.py --patch $(PATCH)
+	$(PY) $(SCRIPTS)/11_apply_adjudication_patch.py --patch $(PATCH)
 
-build-qrels:
-	$(PY) $(SCRIPTS)/14_build_qrels.py --config $(CONFIG_BENCH) \
+build-qrels: auto-label-train
+	$(PY) $(SCRIPTS)/12_build_qrels.py --config $(CONFIG_BENCH) \
 		--adjudication $(ANNOT_DIR)/analysis/adjudication_val_test_full_completed.csv
 
 # ============================================================

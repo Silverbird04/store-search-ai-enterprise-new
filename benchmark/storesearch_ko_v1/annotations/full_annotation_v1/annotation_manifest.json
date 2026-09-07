@@ -1,0 +1,72 @@
+{
+  "annotation_round": "full_annotation_v1",
+  "benchmark_status": "PROVISIONAL",
+  "purpose": "Human-judged benchmark for zero-shot embedding model selection and subsequent small-scale fine-tuning experiments.",
+  "query_splits": {
+    "train": 60,
+    "val": 32,
+    "test": 60
+  },
+  "annotator_A": {
+    "splits": [
+      "val",
+      "test"
+    ],
+    "queries": 92,
+    "rows": 9880
+  },
+  "annotator_B": {
+    "splits": [
+      "val",
+      "test"
+    ],
+    "queries": 92,
+    "rows": 9880
+  },
+  "split_stats": [
+    {
+      "split": "train",
+      "queries": 60,
+      "judgments": 6821,
+      "mean_candidates_per_query": 113.68333333333334,
+      "min_candidates_per_query": 67,
+      "max_candidates_per_query": 154
+    },
+    {
+      "split": "val",
+      "queries": 32,
+      "judgments": 3540,
+      "mean_candidates_per_query": 110.625,
+      "min_candidates_per_query": 72,
+      "max_candidates_per_query": 154
+    },
+    {
+      "split": "test",
+      "queries": 60,
+      "judgments": 6340,
+      "mean_candidates_per_query": 105.66666666666667,
+      "min_candidates_per_query": 67,
+      "max_candidates_per_query": 155
+    }
+  ],
+  "relevance": {
+    "grades": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "binary_relevance_threshold": 2
+  },
+  "annotation_policy": {
+    "train": "Not human-annotated. Automatically labeled by scripts/08_auto_label_train_qrels.py from query-family positive_terms/boundary_terms rules (weak supervision).",
+    "validation": "Independent double human annotation followed by adjudication.",
+    "test": "Independent double human annotation followed by adjudication."
+  },
+  "data_leakage_policy": {
+    "train": "May be used for fine-tuning, hard-negative mining, and training.",
+    "validation": "May be used for model/template/hyperparameter selection, but never gradient training.",
+    "test": "Strictly held out. Must never be used for model training, hard-negative mining, prompt tuning, template selection, or hyperparameter selection."
+  },
+  "important": "This is a provisional benchmark intended for embedding model selection and initial fine-tuning experiments. Publication-final benchmark freezing may require additional dense pooling and construct-validity review."
+}
