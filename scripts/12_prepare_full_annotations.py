@@ -8,10 +8,11 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import cohen_kappa_score
 
-from store_search_ai.pipeline.common import load_config
+from store_search_ai.pipeline.common import load_config, write_trec_qrels
 
 
 EXPECTED_FILES = {
+    "A_train": "annotation_A_train_completed.csv",
     "A_val": "annotation_A_val_completed.csv",
     "A_test": "annotation_A_test_completed.csv",
     "B_val": "annotation_B_val_completed.csv",
@@ -260,6 +261,7 @@ def main() -> None:
 
     # Split integrity.
     expected_split = {
+        "A_train": "train",
         "A_val": "val",
         "A_test": "test",
         "B_val": "val",
@@ -272,10 +274,41 @@ def main() -> None:
                 f"{key}: expected split={split}, found={found}"
             )
 
-    # Train qrels는 사람이 아니라
-    # scripts/08_auto_label_train_qrels.py가 자동 생성한다
-    # (query family positive_terms/boundary_terms 규칙 기반).
-    # 여기서는 val/test 사람 이중 라벨링만 다룬다.
+    # Train: single annotation.
+    train = data["A_train"].copy()
+
+    train_usable = train[
+        train["relevance"].notna()
+        & ~train["uncertain_flag"]
+    ].copy()
+
+    train_qrels = train_usable[
+        ["query_id", "doc_id", "relevance", "query_family"]
+    ].copy()
+
+    train_qrels["relevance"] = (
+        train_qrels["relevance"].astype(int)
+    )
+
+    train_qrels.to_csv(
+        qrels_dir / "qrels_train_provisional.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
+
+    write_trec_qrels(
+        train_qrels,
+        qrels_dir / "qrels_train_provisional.trec",
+    )
+
+    train[
+        train["relevance"].isna()
+        | train["uncertain_flag"]
+    ].to_csv(
+        analysis_dir / "train_uncertain_excluded.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
 
     val_merged, val_report = pairwise_report(
         data["A_val"],
@@ -376,10 +409,24 @@ def main() -> None:
 
     summary = {
         "benchmark_status": "PROVISIONAL",
-        "train": (
-            "Not handled here — see "
-            "scripts/08_auto_label_train_qrels.py"
-        ),
+        "train": {
+            "rows": int(len(train)),
+            "queries": int(train["query_id"].nunique()),
+            "usable_for_training": int(len(train_usable)),
+            "excluded_uncertain": int(
+                len(train) - len(train_usable)
+            ),
+            "grade_distribution": {
+                str(int(k)): int(v)
+                for k, v in (
+                    train_usable["relevance"]
+                    .astype(int)
+                    .value_counts()
+                    .sort_index()
+                    .items()
+                )
+            },
+        },
         "val": val_report,
         "test": test_report,
         "total_adjudication_rows": int(len(needed)),

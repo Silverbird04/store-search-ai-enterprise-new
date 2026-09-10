@@ -36,7 +36,7 @@ def get_benchmark_dir(config: dict, create: bool = True) -> Path:
 def sha256_file(path: str | Path) -> str:
     """파일 전체를 청크 단위로 읽어 SHA256 hexdigest를 반환한다.
 
-    05_init_benchmark.py, 12_build_qrels.py에 각각 있던 동일 구현을 통합.
+    05_init_benchmark.py, 14_build_qrels.py에 각각 있던 동일 구현을 통합.
     (config/queries 변경 추적용 — data/corpus의 text_hash와는 별개 용도)
     """
 
@@ -50,7 +50,7 @@ def sha256_file(path: str | Path) -> str:
 def load_active_queries(benchmark_dir: str | Path) -> pd.DataFrame:
     """benchmark_dir/queries.csv를 읽어 status == "active" 인 행만 반환한다.
 
-    05(생성 직후 제외)를 뺀 06, 07, 08, 10, 11, 14, 15에서 반복되던
+    05(생성 직후 제외)를 뺀 06, 07, 15, 17에서 반복되던
     `queries = pd.read_csv(...); queries = queries[queries["status"] == "active"]`
     패턴을 통합.
     """
@@ -63,7 +63,7 @@ def write_trec_qrels(frame: pd.DataFrame, path: str | Path) -> None:
     """query_id/doc_id/relevance 컬럼을 가진 DataFrame을 TREC qrels 포맷으로 저장한다.
 
     포맷: "{query_id} 0 {doc_id} {relevance}"
-    10_prepare_full_annotations.py, 12_build_qrels.py에 각각 있던 동일 구현을 통합.
+    12_prepare_full_annotations.py, 14_build_qrels.py에 각각 있던 동일 구현을 통합.
     """
 
     path = Path(path)

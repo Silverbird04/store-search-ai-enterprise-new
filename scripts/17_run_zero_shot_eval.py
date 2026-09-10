@@ -3,10 +3,10 @@
 BEIR 스타일로 관심사를 분리한다:
   1. `store_search_ai.models.*`      — 텍스트를 벡터로 바꾸는 것만 안다 (모델 교체 지점)
   2. `store_search_ai.retrieval.exact_search` — 벡터로 top-k run을 만드는 것만 안다 (ANN으로 교체될 지점)
-  3. `scripts/14_evaluate_run.py`    — run을 채점하는 것만 안다 (모든 모델·모든 실험이 공유하는 단일 기준)
+  3. `scripts/16_evaluate_run.py`    — run을 채점하는 것만 안다 (모든 모델·모든 실험이 공유하는 단일 기준)
 
 이 스크립트는 1, 2를 호출해 run.csv를 만든 뒤, **채점 로직을 재구현하지 않고**
-`14_evaluate_run.py`를 그대로 서브프로세스로 호출한다. 원본 프로젝트의 `evaluation/metrics.py`는
+`16_evaluate_run.py`를 그대로 서브프로세스로 호출한다. 원본 프로젝트의 `evaluation/metrics.py`는
 `ir_measures` 기반 공식 evaluator와 독립적으로 nDCG/Recall 등을 재구현하고 있어서, 두 계산이
 언젠가 어긋나면(예: binary threshold를 한쪽만 바꾸는 실수) 어느 쪽이 맞는지 알 수 없는 위험이
 있었다. 그래서 이번 정리에서는 그 중복 구현을 가져오지 않고, 평가는 항상 이 한 경로로만
@@ -15,10 +15,10 @@ BEIR 스타일로 관심사를 분리한다:
 
 사용 예:
     # 실제 모델
-    python scripts/15_run_zero_shot_eval.py --model-config configs/models/bge_m3.yaml --split val
+    python scripts/17_run_zero_shot_eval.py --model-config configs/models/bge_m3.yaml --split val
 
     # 네트워크/GPU 없이 배관만 검증 (숫자는 무의미)
-    python scripts/15_run_zero_shot_eval.py --dummy --split val
+    python scripts/17_run_zero_shot_eval.py --dummy --split val
 """
 
 from __future__ import annotations
@@ -110,7 +110,7 @@ def main() -> None:
     eval_tag = f"{tag}_{args.split}"
     cmd = [
         sys.executable,
-        str(Path(__file__).with_name("14_evaluate_run.py")),
+        str(Path(__file__).with_name("16_evaluate_run.py")),
         "--qrels", str(qrels_path),
         "--run", str(run_path),
         "--tag", eval_tag,

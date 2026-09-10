@@ -62,10 +62,10 @@ corpus 산출물 버전)은 별도로 관리됩니다. 데이터가 바뀌면 �
 
 ```yaml
 - family: chicken              # family 이름 (영문, snake_case, 전체 파일 내에서 유일해야 함)
-  split: train                 # train / val / test 중 하나. 같은 family가 두 split에 걸치면 안 됨(leakage 방지, 13_validate_benchmark.py가 검사)
+  split: train                 # train / val / test 중 하나. 같은 family가 두 split에 걸치면 안 됨(leakage 방지, 15_validate_benchmark.py가 검사)
   intent_definition: 조리된 치킨·통닭류를 판매하는 음식점   # 애노테이터에게 보여줄 의도 설명 (모델 입력 아님)
-  positive_terms: [치킨, 통닭, 치킨전문점, 닭강정]          # (a) pooling 시 targeted term-match 채널, (b) train qrels 자동 라벨링(relevance=3)에 사용
-  boundary_terms: [생닭, 닭고기, 육계]                     # (a) 경계 사례 pooling 채널, (b) train qrels 자동 라벨링(relevance=1)에 사용
+  positive_terms: [치킨, 통닭, 치킨전문점, 닭강정]          # pooling 시 targeted term-match 채널(경계 사례 발굴용) — relevance는 사람이 직접 판정
+  boundary_terms: [생닭, 닭고기, 육계]                     # 경계 사례 pooling 채널 — relevance는 사람이 직접 판정
   queries:                     # 이 family에 속한 실제 query variant 목록. 최소 3개 이상 필요
     - type: exact
       text: 치킨
@@ -77,10 +77,10 @@ corpus 산출물 버전)은 별도로 관리됩니다. 데이터가 바뀌면 �
       text: 치킨 먹을 데
 ```
 
-**주의**: `positive_terms`/`boundary_terms`는 pooling 후보 발굴뿐 아니라(기존 역할) **train qrels
-자동 라벨링에도 그대로 쓰입니다**(`08_auto_label_train_qrels.py`). val/test는 사람이 직접 판정하므로
-이 두 필드가 relevance에 직접 영향을 주지 않지만, train은 이 필드가 곧 relevance 규칙이 됩니다 — 너무
-느슨하거나(오탐 많음) 너무 좁은(recall 낮음) term을 넣지 않도록 주의하세요.
+**주의**: `positive_terms`/`boundary_terms`는 pooling 후보 발굴(targeted term-match 채널, 경계 사례
+채널)에만 쓰입니다. train/val/test 모두 relevance는 **사람이 직접 판정**합니다(`docs/PIPELINE.md`
+4~6절) — 이 두 필드는 relevance 값 자체에는 영향을 주지 않지만, 후보 pool의 구성(무엇이 애노테이터
+앞에 보이는지)에는 영향을 주므로 너무 느슨하거나 너무 좁은 term을 넣으면 pool 품질이 떨어집니다.
 
 새 family를 추가하는 절차:
 
@@ -96,10 +96,11 @@ corpus 산출물 버전)은 별도로 관리됩니다. 데이터가 바뀌면 �
 
 ```bash
 python scripts/05_init_benchmark.py
-python scripts/13_validate_benchmark.py --stage pilot
+python scripts/15_validate_benchmark.py --stage pilot
 ```
 
-`13_validate_benchmark.py`가 family당 split 하나만 있는지, query 텍스트 중복이 없는지 등을 검사해줍니다.
-**주의**: query family를 추가/변경하면 pooling(06~07)부터 다시 실행해야 합니다. train은
-`08_auto_label_train_qrels.py`를 다시 돌리면 자동으로 갱신되고, val/test는 새로 추가된 query가 애노테이션이
-전혀 안 되어 있으므로(`docs/PIPELINE.md` 5~6절) 사람이 새로 라벨링해야 qrels에 반영됩니다.
+`15_validate_benchmark.py`가 family당 split 하나만 있는지, query 텍스트 중복이 없는지 등을 검사해줍니다.
+**주의**: query family를 추가/변경하면 pooling(06~07)부터 다시 실행해야 하고, 새로 추가되거나 바뀐
+query는 train/val/test 가릴 것 없이 애노테이션이 전혀 안 되어 있는 상태이므로 `docs/PIPELINE.md` 4~6절
+(calibration은 이미 끝났다면 생략 가능, 본 애노테이션 → adjudication)을 사람이 다시 거쳐야 qrels에
+반영됩니다. 변경 전 family의 기존 완료 라벨은 그대로 재사용되고, 새/변경 query만 다시 라벨링하면 됩니다.

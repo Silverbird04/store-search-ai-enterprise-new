@@ -1,0 +1,7 @@
+﻿store_id,field,values,source_record_keys
+0ac2150d-00bf-4200-9dd4-654651eeb3f9,geo,"[{""latitude"": 36.33577143, ""longitude"": 127.413248899}, {""latitude"": 36.335785, ""longitude"": 127.41328}]",stores.xlsx:대전가맹점:2254|stores.xlsx:대전가맹점:2605
+0ac2150d-00bf-4200-9dd4-654651eeb3f9,mobile_payment,"[np.True_, np.False_]",stores.xlsx:대전가맹점:2254|stores.xlsx:대전가맹점:2605
+a8a3c299-3348-470e-b1cc-da3a50cf48af,item,"[""식육"", ""돈육""]",stores.xlsx:대전가맹점:5415|stores.xlsx:대전가맹점:6916
+7b487060-2b51-4736-ac6c-0bc758931bcc,merchant_no,"[""0448623550"", ""0418623550""]",stores.xlsx:세종가맹점:4095|stores.xlsx:세종가맹점:4112
+4194251c-d9de-4612-8e25-a70ccbe97a98,item,"[""떡"", ""떡류""]",stores.xlsx:세종가맹점:4096|stores.xlsx:세종가맹점:4165
+6d644a9e-6b4e-4584-a58b-451ebf8ddc67,item,"[""순대국"", ""음식물판매""]",stores.xlsx:세종가맹점:4449|stores.xlsx:세종가맹점:4450

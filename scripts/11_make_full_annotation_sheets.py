@@ -388,12 +388,10 @@ def main() -> None:
     # ==================================================
     # Human A
     #
-    # Val + Test만 사람이 판정한다.
+    # Train + Val + Test 전체 판정
     #
-    # Train qrels는 08_auto_label_train_qrels.py가
-    # query family의 positive_terms/boundary_terms 규칙으로
-    # 자동 생성하므로(weak supervision), 여기서는 시트를
-    # 만들지 않는다.
+    # Train:
+    #   fine-tuning dataset 생성
     #
     # Val:
     #   hyperparameter / template / model selection
@@ -402,16 +400,7 @@ def main() -> None:
     #   final held-out evaluation
     # ==================================================
 
-    a = pool[
-        pool[
-            "split"
-        ].isin(
-            [
-                "val",
-                "test",
-            ]
-        )
-    ].copy()
+    a = pool.copy()
 
     a[
         "annotator"
@@ -426,11 +415,12 @@ def main() -> None:
     write_annotation_file(
         a,
         output_dir
-        / "annotation_A_val_test.csv",
+        / "annotation_A_all.csv",
     )
 
     # 편하게 작업할 수 있도록 split별 파일도 생성.
     for split in [
+        "train",
         "val",
         "test",
     ]:
@@ -451,7 +441,11 @@ def main() -> None:
     # ==================================================
     # Human B
     #
-    # Val + Test를 독립적으로 재판정(이중 라벨링).
+    # Validation + Test를 독립적으로 재판정.
+    #
+    # Train은 training signal이므로
+    # 모델 성능 보고용 gold가 아니기 때문에
+    # 시간 절약을 위해 single annotation.
     # ==================================================
 
     b = pool[
@@ -623,6 +617,7 @@ def main() -> None:
 
         "annotator_A": {
             "splits": [
+                "train",
                 "val",
                 "test",
             ],
@@ -682,9 +677,8 @@ def main() -> None:
 
             "train":
                 (
-                    "Not human-annotated. Automatically labeled by "
-                    "scripts/08_auto_label_train_qrels.py from query-family "
-                    "positive_terms/boundary_terms rules (weak supervision)."
+                    "Single human annotation. "
+                    "Used only for training/fine-tuning."
                 ),
 
             "validation":
@@ -777,8 +771,7 @@ def main() -> None:
     )
 
     print(
-        "- Train: not generated here (auto-labeled by "
-        "08_auto_label_train_qrels.py)"
+        "- Train: A only"
     )
 
     print(

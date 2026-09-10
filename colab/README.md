@@ -14,7 +14,7 @@
                               ◀──
 3. Drive의 runs/zero_shot/ 를
    results/zero_shot/ 에 그대로 복사
-4. scripts/16_score_zero_shot_runs.py
+4. scripts/18_score_zero_shot_runs.py
    로 전체 채점 → 리더보드
 ```
 
@@ -56,21 +56,21 @@ Drive의 `store-search-ai/runs/zero_shot/`를 통째로 내려받아 로컬 프�
 ## 4. VSCode에서 채점
 
 ```bash
-python scripts/16_score_zero_shot_runs.py --split val
+python scripts/18_score_zero_shot_runs.py --split val
 ```
 
-`results/zero_shot/*/run_*_val.csv`를 전부 찾아서 공식 evaluator(`scripts/14_evaluate_run.py`)로
+`results/zero_shot/*/run_*_val.csv`를 전부 찾아서 공식 evaluator(`scripts/16_evaluate_run.py`)로
 채점하고, `results/zero_shot/leaderboard_val.csv`에 nDCG@10 기준 정렬된 비교표를 남깁니다.
 
 모델 하나만 빠르게 확인하고 싶으면 기존처럼:
 
 ```bash
-python scripts/14_evaluate_run.py --qrels benchmark/storesearch_ko_v1/qrels_val.trec \
+python scripts/16_evaluate_run.py --qrels benchmark/storesearch_ko_v1/qrels_val.trec \
     --run results/zero_shot/bge_m3/run_t1_val.csv --tag bge_m3_t1_val
 ```
 
 ## 로컬에 GPU가 있다면
 
-Colab 없이 `scripts/15_run_zero_shot_eval.py`를 로컬에서 바로 실행해도 됩니다 (`pip install -e
-".[embedding]"` 필요). 폴더 구조와 스키마가 동일하므로 `scripts/16_score_zero_shot_runs.py`은
+Colab 없이 `scripts/17_run_zero_shot_eval.py`를 로컬에서 바로 실행해도 됩니다 (`pip install -e
+".[embedding]"` 필요). 폴더 구조와 스키마가 동일하므로 `scripts/18_score_zero_shot_runs.py`은
 Colab 결과와 로컬 결과를 구분 없이 함께 채점합니다.

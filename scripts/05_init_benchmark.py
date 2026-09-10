@@ -11,9 +11,9 @@ from store_search_ai.pipeline.common import load_config, sha256_file
 GUIDELINE = """# StoreSearch-KO v1 Annotation Guideline
 
 ## 적용 범위
-이 가이드라인은 **val/test(사람이 직접 판정하는 split)에만** 적용됩니다. train qrels는
-query family의 `positive_terms`/`boundary_terms` 규칙으로 `08_auto_label_train_qrels.py`가
-자동 생성하며, 사람이 라벨링하지 않습니다.
+이 가이드라인은 train/val/test 모두에 적용됩니다. train은 애노테이터 1명의 단일 라벨링
+(`11_make_full_annotation_sheets.py`), val/test는 사람 2명의 이중 라벨링 + adjudication을
+거쳐 확정됩니다(`docs/PIPELINE.md` 4~6절).
 
 ## 목적
 사용자 Query에 대해 각 매장이 검색 결과로 얼마나 적절한지 0~3의 graded relevance로 평가한다.

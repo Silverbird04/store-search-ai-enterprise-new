@@ -3,7 +3,7 @@
 
 Colab에서 실행: 모델 로드 → corpus/query 인코딩 → exact cosine 검색 → run.csv 생성.
 채점(scores)은 여기서 하지 않는다 — run.csv를 VSCode 프로젝트로 가져가서
-`scripts/16_score_zero_shot_runs.py`(공식 evaluator)로 한다. 이유는
+`scripts/18_score_zero_shot_runs.py`(공식 evaluator)로 한다. 이유는
 docs/MODELING.md의 "왜 이렇게 나눴는가" 참고: metric 계산은 한 곳에서만 한다.
 
 사용 전 준비 (한 번만):

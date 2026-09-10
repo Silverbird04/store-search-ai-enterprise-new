@@ -16,9 +16,12 @@
 6. 전처리/벤치마크 구축/평가를 단계별 스크립트로 분리합니다(아래 파이프라인 참고).
 7. **Document representation은 T1(`search_text_t1_minimal` = 가맹점명 + 취급품목)을 공식으로 사용합니다.**
    예: `가맹점명: 열매서점 / 취급품목: 서적`
-8. **Train qrels는 사람이 아니라 query family의 `positive_terms`/`boundary_terms` 규칙으로 자동
-   생성됩니다(weak/distant supervision)**. Val/Test qrels는 사람 2명의 이중 라벨링 + adjudication을
-   거친 gold입니다. 자세한 이유는 아래 "Train/Val/Test 분할 방식"을 참고하세요.
+8. **Train/Val/Test qrels 모두 사람이 직접 판정합니다.** Train은 애노테이터 1명의 단일 라벨링, Val/Test는
+   사람 2명의 이중 라벨링 + adjudication을 거친 gold입니다. (한때 train만 query family의
+   `positive_terms`/`boundary_terms` 규칙으로 자동 라벨링하는 weak supervision 방식을 썼으나, 같은
+   데이터로 직접 비교한 결과 사람이 확정한 relevance=3 문서의 약 80%가 규칙 기반 방식에서는
+   relevance=0으로 떨어지는 재현율 문제가 확인되어 사람 라벨링으로 되돌렸습니다 — 해당 스크립트는
+   `archive/rule_based_train_labeling/`에 보존.) 자세한 이유는 아래 "Train/Val/Test 분할 방식"을 참고하세요.
 
 ## 설치
 
@@ -30,7 +33,7 @@ pip install -e ".[dev]"
 
 `pip install -e ".[embedding]"`는 dense encoder(torch/transformers/sentence-transformers)가 필요할 때만
 추가로 설치하세요. **Python은 3.11만 지원합니다** (`pyproject.toml`의 `requires-python`) — `ir-measures`가
-Python 3.12+에서 제거된 `ast.Num`을 사용해 평가 스크립트(14번)가 깨집니다.
+Python 3.12+에서 제거된 `ast.Num`을 사용해 평가 스크립트(16번)가 깨집니다.
 
 ## 폴더 구조
 
@@ -39,7 +42,7 @@ configs/
   data/default.yaml              raw xlsx 스키마·컬럼 매핑·지역(시도) 별칭 테이블·검증 규칙
   benchmark/storesearch_ko_v1.yaml   벤치마크 경로/버전/파라미터(pooling, annotation, validation, evaluation)
   benchmark/query_families_v1.yaml   query family 정의 (직접 편집 대상, docs/EXTENDING_DATA.md 참고)
-  evaluation/default.yaml        공식 metric 목록 (문서화용 — 14_evaluate_run.py는 metric을 자체 상수로 갖고 있음)
+  evaluation/default.yaml        공식 metric 목록 (문서화용 — 16_evaluate_run.py는 metric을 자체 상수로 갖고 있음)
   models/*.yaml                  비교 대상 임베딩 모델 설정 (zero-shot 비교/파인튜닝 후보)
 src/store_search_ai/
   common/io.py                   yaml/엑셀 로딩 유틸
@@ -47,7 +50,7 @@ src/store_search_ai/
   pipeline/common.py             scripts/*.py 공통 보일러플레이트 (yaml 로드, TREC 저장 등)
   models/                        임베딩 인코더 (BEIR 스타일, docs/MODELING.md 참고)
   retrieval/exact_search.py      exact cosine 검색 (ANN 이전 단계 모델 비교용)
-scripts/01_*.py ~ scripts/16_*.py   파이프라인 본체 (docs/PIPELINE.md 참고)
+scripts/01_*.py ~ scripts/18_*.py   파이프라인 본체 (docs/PIPELINE.md 참고)
 data/
   raw/stores_20260907.xlsx       원본 전국 데이터 (수정 금지)
   interim/ processed/ registry/  전처리 중간/최종 산출물 (registry 제외 전부 재생성 가능)
@@ -55,10 +58,11 @@ data/
 benchmark/storesearch_ko_v1/
   queries.csv, annotation_guideline.md, qrels*.csv/.trec, benchmark_manifest.json
 archive/legacy_v002_benchmark/ 대전/세종 13,832개 매장 기준 과거 사람 라벨링 결과물 (참고용, 코드에서 안 씀)
+archive/rule_based_train_labeling/ 한때 썼던 규칙 기반 train 자동 라벨링 스크립트 (재현율 문제로 보류, 참고용)
 tests/                          단위 테스트 (pytest)
 colab/                          Colab(GPU)에서 임베딩 모델 인코딩하는 스크립트 (colab/README.md 참고)
 docs/
-  PIPELINE.md                    16단계 실행 순서·인자·사람 개입 지점 (필독)
+  PIPELINE.md                    18단계 실행 순서·인자·사람 개입 지점 (필독)
   EXTENDING_DATA.md               raw 데이터 확장 / query family 재정의 방법
   MODELING.md                    임베딩 모델 zero-shot 비교 구조 (BEIR 스타일)
 ```
@@ -93,21 +97,25 @@ python scripts/04_build_corpus.py
 | 5 | `05_init_benchmark.py` | 없음 | `query_families_v1.yaml` → `queries.csv` |
 | 6 | `06_generate_lexical_runs.py` | 없음 | TF-IDF/BM25 pooling run |
 | 7 | `07_build_annotation_pool.py` | 없음 | candidate pool 생성 |
-| 8 | `08_auto_label_train_qrels.py` | 없음 | **train qrels 자동 라벨링**(weak supervision) |
-| 9 | `09_make_full_annotation_sheets.py` | 없음(시트만 생성) | val/test 애노테이션 시트 생성 |
-| — | (사람이 직접 라벨링) | **필요** | annotator A, B가 각자 val/test 시트를 채워 `*_completed.csv`로 저장 |
-| 10 | `10_prepare_full_annotations.py` | 없음 | A/B 비교, 일치분 자동 확정 + adjudication 대상 분리 |
-| — | (사람이 직접 조정) | **필요** | 3rd adjudicator가 불일치 건 확정 |
-| 11 | `11_apply_adjudication_patch.py` | 없음 | adjudication 패치 반영 |
-| 12 | `12_build_qrels.py` | 없음 | train(자동) + val/test(사람) 병합 → 최종 qrels |
-| 13 | `13_validate_benchmark.py` | 없음 | 무결성 검증 |
-| 14 | `14_evaluate_run.py` | 없음 | 공식 evaluator (nDCG@10 등) |
-| 15 | `15_run_zero_shot_eval.py` | 없음(GPU 필요) | 임베딩 모델 인코딩 → 검색 → 14번 호출 |
-| 16 | `16_score_zero_shot_runs.py` | 없음 | 여러 run을 모아 리더보드 생성 |
+| 8 | `08_make_calibration_v1_sheets.py` | 없음(시트만 생성) | calibration v1 시트 생성 |
+| — | (사람이 직접 라벨링) | **필요** | annotator A, B가 calibration 시트를 채움 |
+| 9 | `09_merge_calibration_annotations.py` | 없음 | A/B 합치도(Cohen's kappa) 리포트 (v1/v2 재사용) |
+| 10 | `10_make_calibration_v2_sheets.py` | 없음(시트만 생성) | 경계 불명확 family 재검증용 v2 시트 생성 |
+| 11 | `11_make_full_annotation_sheets.py` | 없음(시트만 생성) | train(A 단독)/val·test(A,B) 애노테이션 시트 생성 |
+| — | (사람이 직접 라벨링) | **필요** | annotator가 train/val/test 시트를 채워 `*_completed.csv`로 저장 |
+| 12 | `12_prepare_full_annotations.py` | 없음 | train 단일 라벨 → provisional qrels, val/test A/B 비교 + adjudication 대상 분리 |
+| — | (사람이 직접 조정) | **필요** | 3rd adjudicator가 val/test 불일치 건 확정 |
+| 13 | `13_apply_adjudication_patch.py` | 없음 | adjudication 패치 반영 |
+| 14 | `14_build_qrels.py` | 없음 | train + val/test(모두 사람) 병합 → 최종 qrels |
+| 15 | `15_validate_benchmark.py` | 없음 | 무결성 검증 |
+| 16 | `16_evaluate_run.py` | 없음 | 공식 evaluator (nDCG@10 등) |
+| 17 | `17_run_zero_shot_eval.py` | 없음(GPU 필요) | 임베딩 모델 인코딩 → 검색 → 16번 호출 |
+| 18 | `18_score_zero_shot_runs.py` | 없음 | 여러 run을 모아 리더보드 생성 |
 
-01~08은 사람 개입 없이 끝까지 자동 재실행됩니다(`make pool && python scripts/08_auto_label_train_qrels.py`).
-9~11은 val/test gold qrels를 만들기 위한 실제 사람 작업이 필요한 구간입니다 — 이 구간을 건너뛰고 자동으로
-생성하는 방법은 없습니다(TREC 스타일 pooling + double annotation + adjudication 관례를 그대로 따름).
+01~07은 사람 개입 없이 끝까지 자동 재실행됩니다(`make pool`). 08~13은 calibration + train/val/test 본
+애노테이션 + adjudication을 위한 실제 사람 작업이 필요한 구간입니다 — 이 구간을 건너뛰고 자동으로
+생성하는 방법은 없습니다(TREC 스타일 pooling + double annotation(val/test)/single annotation(train) +
+adjudication 관례를 그대로 따름).
 
 ## Query family 추가/재정의
 
@@ -119,7 +127,7 @@ python scripts/04_build_corpus.py
 
 - 분할 단위는 **개별 query가 아니라 query family**입니다. 한 family(예: `chicken`)는 train/val/test 중
   정확히 하나에만 속하고, 그 family의 모든 variant(exact/synonym/paraphrase/colloquial)가 같은 split으로
-  갑니다. `13_validate_benchmark.py`가 family가 두 split에 걸치지 않는지 검사합니다.
+  갑니다. `15_validate_benchmark.py`가 family가 두 split에 걸치지 않는지 검사합니다.
 - **Corpus(매장 문서)는 분할하지 않습니다** — train/val/test 모두 동일한 전체 corpus를 대상으로
   검색합니다. BEIR/TREC 스타일 retrieval 벤치마크와 동일하게, 나뉘는 것은 문서가 아니라 **query(및 그
   정답 판정)**입니다.
@@ -129,8 +137,8 @@ python scripts/04_build_corpus.py
   "학습 때 전혀 보지 못한 새로운 매장 카테고리"에 대한 검색 성능을 측정하게 됩니다 — MTEB/BEIR이
   embedding 모델을 미학습 도메인/태스크에 대해 평가하는 것과 같은 철학입니다.
 - **train**: fine-tuning용 (query, positive doc, negative doc) 쌍을 만드는 데 씁니다. qrels는
-  `08_auto_label_train_qrels.py`가 규칙 기반으로 자동 생성한 **weak label(silver)**입니다 — 사람이
-  만든 gold가 아니라는 점을 반드시 팀과 공유해야 합니다.
+  애노테이터 1명이 직접 판정한 라벨입니다(`11_make_full_annotation_sheets.py` → `12_prepare_full_annotations.py`).
+  모델 성능을 "보고"하는 데는 쓰지 않으므로 val/test와 달리 이중 라벨링은 하지 않습니다.
 - **val**: 체크포인트/템플릿(T1/T2/T3)/하이퍼파라미터 선택에만 씁니다. 사람이 이중 라벨링 +
   adjudication한 gold qrels입니다. 절대 gradient 학습에 쓰지 않습니다.
 - **test**: 최종 설정이 다 정해지기 전까지 절대 보지 않는 held-out입니다. 마찬가지로 사람이 만든
@@ -148,17 +156,17 @@ Qwen3 임베딩 파인튜닝에 들어가기 전에 팀원과 아래를 공유�
    - `data/corpus/store_corpus_v002.parquet` (+ `_manifest.json`) — 검색 대상 전체 corpus.
    - `benchmark/storesearch_ko_v1/queries.csv`, `annotation_guideline.md`
    - `benchmark/storesearch_ko_v1/qrels_train.csv`, `qrels_val.csv`, `qrels_test.csv`, `qrels.csv`
-     (+ 대응 `.trec`), `benchmark_manifest.json` — **12_build_qrels.py 실행 후** 생성됩니다.
+     (+ 대응 `.trec`), `benchmark_manifest.json` — **14_build_qrels.py 실행 후** 생성됩니다.
 3. **raw 원본**(`data/raw/stores_20260907.xlsx`)은 용량이 커서 필수는 아니지만, 재현을 위해 공유 스토리지
    경로만이라도 팀과 합의해 두세요. 파생 산출물(2번)만 공유해도 파이프라인을 다시 돌릴 필요 없이 학습에
    바로 쓸 수 있습니다.
-4. train qrels가 **weak/rule-based label**이라는 점, val/test는 사람이 만든 gold라는 점을 명시해서
-   공유하세요(위 "Train/Val/Test 분할 방식" 참고).
+4. train qrels는 애노테이터 1명의 단일 라벨링, val/test는 사람 2명 이중 라벨링 + adjudication을 거친
+   gold라는 점을 명시해서 공유하세요(위 "Train/Val/Test 분할 방식" 참고).
 
 ## 평가
 
 ```bash
-python scripts/14_evaluate_run.py --run <run.csv> --tag <experiment_name>
+python scripts/16_evaluate_run.py --run <run.csv> --tag <experiment_name>
 ```
 
 Run CSV 스키마: `query_id,doc_id,rank,score,system`. Primary metric은 `nDCG@10`(부트스트랩 95% CI 포함).
