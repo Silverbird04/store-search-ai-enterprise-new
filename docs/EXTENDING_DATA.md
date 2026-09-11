@@ -53,12 +53,37 @@ corpus 산출물 버전)은 별도로 관리됩니다. 데이터가 바뀌면 �
 만든 corpus가 이전과 스키마/내용이 다르면 `corpus_version`도 올리세요. 파일 경로는 두 버전 문자열에서
 자동으로 파생되므로 스크립트를 고칠 필요는 없습니다.
 
-## 2. Query family를 직접 정의하기
+## 2. Query family 정의하기
 
-`configs/benchmark/query_families_v1.yaml`이 유일한 정의 파일입니다. `05_init_benchmark.py`가 이 파일만 읽어서
-`queries.csv`를 만듭니다 (다른 데이터 소스 없음).
+**원본은 `data/query/queryset_final.xlsx`입니다** (팀이 통합질의/패밀리목록 시트로 작성). 이 xlsx를
+`scripts/import_queryset_xlsx.py`가 읽어 `configs/benchmark/query_families_v1.yaml`을 생성하고,
+`05_init_benchmark.py`는 그 yaml만 읽어 `queries.csv`를 만듭니다. **즉 실제 편집 대상은 xlsx이고,
+yaml은 생성된 산출물입니다** — yaml을 직접 손으로 고쳐도 동작은 하지만, 다음에 누군가
+`import_queryset_xlsx.py`를 다시 돌리면 그 수정은 덮어써집니다.
 
-각 family는 이런 구조입니다:
+새 질의를 추가/수정하려면:
+
+```bash
+# 1. data/query/queryset_final.xlsx의 "통합질의" 시트에 행 추가(질의/패밀리/대분류/유형/함정 등),
+#    새 family라면 "패밀리목록" 시트에도 한 줄 추가(패밀리/대분류/우선순위 등)
+# 2. 변환 + 재검증
+python scripts/import_queryset_xlsx.py
+python scripts/05_init_benchmark.py
+python scripts/15_validate_benchmark.py --stage pilot
+```
+
+`import_queryset_xlsx.py`가 하는 일(스크립트 상단 docstring에 상세 설명):
+- family당 최소 variant 개수 제한 없음(팀 결정 — 548개 질의 전부 유지)
+- 기존 yaml에 이미 있는 family 이름은 **split을 그대로 물려받음**(재실행해도 train/val/test가 안 흔들림).
+  완전히 새로운 family만 대분류별 균형 + 무작위로 새 split을 배정
+- `intent_definition`은 "{대분류} 중 '{family}'을(를) 판매·제공하는 매장" 형태로 초안만 자동 생성 —
+  애노테이터에게 실제로 보여줄 문구이므로 **사람이 검토·수정해야 함**
+- `positive_terms`/`boundary_terms`는 통합질의 시트의 T1/T2 질의 텍스트와 `함정` 컬럼에서 뽑음(둘 다
+  pooling 후보 발굴에만 쓰이고 relevance 판정에는 영향 없음)
+- xlsx 병합 과정에서 패밀리가 잘못 배정된 게 확인된 행은 `RECLASSIFY_QUERIES` 딕셔너리에서 정정함
+  (원본유형 태그 기반 판단 — 새로 발견되는 오분류가 있으면 이 딕셔너리에 추가)
+
+yaml이 생성하는 각 family의 구조는 다음과 같습니다(참고용 — 직접 쓸 필요는 없음):
 
 ```yaml
 - family: chicken              # family 이름 (영문, snake_case, 전체 파일 내에서 유일해야 함)
@@ -66,7 +91,7 @@ corpus 산출물 버전)은 별도로 관리됩니다. 데이터가 바뀌면 �
   intent_definition: 조리된 치킨·통닭류를 판매하는 음식점   # 애노테이터에게 보여줄 의도 설명 (모델 입력 아님)
   positive_terms: [치킨, 통닭, 치킨전문점, 닭강정]          # pooling 시 targeted term-match 채널(경계 사례 발굴용) — relevance는 사람이 직접 판정
   boundary_terms: [생닭, 닭고기, 육계]                     # 경계 사례 pooling 채널 — relevance는 사람이 직접 판정
-  queries:                     # 이 family에 속한 실제 query variant 목록. 최소 3개 이상 필요
+  queries:                     # 이 family에 속한 실제 query variant 목록. 최소 1개 필요(3개 이상 권장)
     - type: exact
       text: 치킨
     - type: synonym
@@ -82,24 +107,15 @@ corpus 산출물 버전)은 별도로 관리됩니다. 데이터가 바뀌면 �
 4~6절) — 이 두 필드는 relevance 값 자체에는 영향을 주지 않지만, 후보 pool의 구성(무엇이 애노테이터
 앞에 보이는지)에는 영향을 주므로 너무 느슨하거나 너무 좁은 term을 넣으면 pool 품질이 떨어집니다.
 
-새 family를 추가하는 절차:
+`import_queryset_xlsx.py`(및 `05_init_benchmark.py`)가 강제하는 제약:
 
-1. `family` 이름이 파일 전체에서 겹치지 않는지 확인 (겹치면 `05_init_benchmark.py`가 에러)
-2. `split`을 정한다 — **한 family는 train/val/test 중 하나에만 속함** (같은 의도의 query를 여러 split에
-   나눠 넣지 않는 것이 원칙; 이렇게 하면 train에서 본 것과 완전히 같은 개념이 test에 나오는 것을 방지)
-3. `queries` 안에 최소 3개 이상 variant 작성 — `type`은 자유 문자열이지만 기존 관례는
-   `exact`(정식 명칭) / `synonym`(동의어) / `paraphrase`(설명형) / `colloquial`(구어체) 4종
+1. `family` 이름이 파일 전체에서 겹치지 않아야 함 (겹치면 `05_init_benchmark.py`가 에러)
+2. `split`은 train/val/test 중 하나 — **한 family는 하나의 split에만 속함** (같은 의도의 query를 여러
+   split에 나눠 넣지 않는 것이 원칙; leakage 방지)
+3. `queries`는 최소 1개 필요(3개 이상 권장 — 표기·동의어·구어체 등 다양성이 있어야 pooling 품질이 좋음)
 4. 같은 query 텍스트(공백 정규화 + casefold 기준)가 파일 전체에서 중복되면 안 됨 — 중복 시 에러
-5. `query_id`는 `q_{family}_{순번:02d}` 형식으로 스크립트가 자동 생성 (직접 안 정해도 됨)
+5. `query_id`는 `q_{family}_{순번:02d}` 형식으로 `05_init_benchmark.py`가 자동 생성
 
-작성 후:
-
-```bash
-python scripts/05_init_benchmark.py
-python scripts/15_validate_benchmark.py --stage pilot
-```
-
-`15_validate_benchmark.py`가 family당 split 하나만 있는지, query 텍스트 중복이 없는지 등을 검사해줍니다.
 **주의**: query family를 추가/변경하면 pooling(06~07)부터 다시 실행해야 하고, 새로 추가되거나 바뀐
 query는 train/val/test 가릴 것 없이 애노테이션이 전혀 안 되어 있는 상태이므로 `docs/PIPELINE.md` 4~6절
 (calibration은 이미 끝났다면 생략 가능, 본 애노테이션 → adjudication)을 사람이 다시 거쳐야 qrels에

@@ -3,50 +3,51 @@
   "benchmark_status": "PROVISIONAL",
   "purpose": "Human-judged benchmark for zero-shot embedding model selection and subsequent small-scale fine-tuning experiments.",
   "query_splits": {
-    "train": 60,
-    "val": 32,
-    "test": 60
+    "train": 237,
+    "val": 136,
+    "test": 175
   },
   "annotator_A": {
     "splits": [
+      "train",
       "val",
       "test"
     ],
-    "queries": 92,
-    "rows": 9880
+    "queries": 548,
+    "rows": 61619
   },
   "annotator_B": {
     "splits": [
       "val",
       "test"
     ],
-    "queries": 92,
-    "rows": 9880
+    "queries": 311,
+    "rows": 34857
   },
   "split_stats": [
     {
       "split": "train",
-      "queries": 60,
-      "judgments": 6821,
-      "mean_candidates_per_query": 113.68333333333334,
-      "min_candidates_per_query": 67,
-      "max_candidates_per_query": 154
+      "queries": 237,
+      "judgments": 26762,
+      "mean_candidates_per_query": 112.91983122362869,
+      "min_candidates_per_query": 35,
+      "max_candidates_per_query": 199
     },
     {
       "split": "val",
-      "queries": 32,
-      "judgments": 3540,
-      "mean_candidates_per_query": 110.625,
-      "min_candidates_per_query": 72,
-      "max_candidates_per_query": 154
+      "queries": 136,
+      "judgments": 16230,
+      "mean_candidates_per_query": 119.33823529411765,
+      "min_candidates_per_query": 55,
+      "max_candidates_per_query": 274
     },
     {
       "split": "test",
-      "queries": 60,
-      "judgments": 6340,
-      "mean_candidates_per_query": 105.66666666666667,
-      "min_candidates_per_query": 67,
-      "max_candidates_per_query": 155
+      "queries": 175,
+      "judgments": 18627,
+      "mean_candidates_per_query": 106.44,
+      "min_candidates_per_query": 53,
+      "max_candidates_per_query": 220
     }
   ],
   "relevance": {
@@ -59,7 +60,7 @@
     "binary_relevance_threshold": 2
   },
   "annotation_policy": {
-    "train": "Not human-annotated. Automatically labeled by scripts/08_auto_label_train_qrels.py from query-family positive_terms/boundary_terms rules (weak supervision).",
+    "train": "Single human annotation. Used only for training/fine-tuning.",
     "validation": "Independent double human annotation followed by adjudication.",
     "test": "Independent double human annotation followed by adjudication."
   },

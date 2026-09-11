@@ -90,12 +90,16 @@ python scripts/09_merge_calibration_annotations.py \
 python scripts/11_make_full_annotation_sheets.py
 ```
 
-- train: 애노테이터 A만 단일 라벨링 (`annotation_A_train.csv`) — training signal이므로 모델 성능을
-  "보고"하는 데는 쓰지 않아 시간 절약을 위해 단일 라벨링으로 처리
-- val/test: 애노테이터 A, B 모두 독립적으로 라벨링 (`annotation_A_val.csv`/`_test.csv`,
-  `annotation_B_val.csv`/`_test.csv`)
+- train: 애노테이터 A만 단일 라벨링 — training signal이므로 모델 성능을 "보고"하는 데는 쓰지
+  않아 시간 절약을 위해 단일 라벨링으로 처리
+- val/test: 애노테이터 A, B 모두 독립적으로 라벨링
 
-각 시트를 사람이 채운 뒤 `*_completed.csv`로 저장:
+같은 내용을 두 가지 형태로 만들어 둔다(어느 쪽을 채워도 됨):
+- split별 파일: `annotation_A_train.csv`/`_val.csv`/`_test.csv`, `annotation_B_val.csv`/`_test.csv`
+- **A/B 각자 한 파일로 몰아 작업하고 싶으면**: `annotation_A_all.csv`(A가 train+val+test 전체를
+  한 파일에서 작업), `annotation_B_val_test.csv`(B가 val+test를 한 파일에서 작업)
+
+**split별 파일로 작업한 경우** — 채운 뒤 그대로 `*_completed.csv`로 저장:
 
 ```
 benchmark/storesearch_ko_v1/annotations/full_annotation_v1/completed/
@@ -105,6 +109,16 @@ benchmark/storesearch_ko_v1/annotations/full_annotation_v1/completed/
   annotation_B_val_completed.csv
   annotation_B_test_completed.csv
 ```
+
+**combined 파일(`_all`/`_val_test`)로 작업한 경우** — `annotation_A_all_completed.csv`,
+`annotation_B_val_test_completed.csv`로 저장한 뒤 아래로 5개 split별 파일로 쪼갠다(같은
+`completed/` 폴더에 넣으면 인자 없이 실행됨):
+
+```bash
+python scripts/split_completed_annotations.py
+```
+
+이후 공통:
 
 ```bash
 python scripts/12_prepare_full_annotations.py
@@ -149,14 +163,15 @@ python scripts/16_evaluate_run.py --run <모델_run.csv> --tag <실험명>
 - 16: 공식 evaluator. `--qrels`(기본값 `qrels_val.trec`), `--run`, `--tag` 필요. Primary metric은
   `nDCG@10`, bootstrap 95% CI 포함.
 
-## 8. Zero-shot 모델 비교 (선택)
+## 8. 모델 평가 — zero-shot 비교, 이후 fine-tuning 평가에도 재사용 (선택)
 
 ```bash
-python scripts/17_run_zero_shot_eval.py --model-config configs/models/bge_m3.yaml --split val
-python scripts/18_score_zero_shot_runs.py --split val
+python scripts/17_run_model_eval.py --model-config configs/models/bge_m3.yaml --split val
+python scripts/18_score_model_runs.py --split val
 ```
 
-`docs/MODELING.md` 참고.
+`docs/MODELING.md` 참고. Fine-tuning 이후에도 이 두 스크립트를 그대로 써서 fine-tuned 모델을
+평가합니다(`docs/TRAINING.md` 참고) — 그래서 이름에 "zero_shot"을 넣지 않았습니다.
 
 ## 사람 개입이 필요한 범위
 
@@ -173,6 +188,9 @@ query family의 `positive_terms`/`boundary_terms` 문자열 매칭만으로 trai
 떨어지는(재현율이 매우 낮은) 문제가 확인되어, 다시 사람 라벨링 방식(현재 문서의 4~6절)으로 되돌렸습니다.
 해당 스크립트와 상세 내용은 `archive/rule_based_train_labeling/`에 보존되어 있습니다.
 
-`archive/legacy_v002_benchmark/`에는 이전 데이터(대전/세종 13,832개 매장) 기준으로 이미 완료된 val/test
-gold qrels(사람 calibration + full annotation + adjudication으로 만든 것)가 참고용으로 보존되어 있습니다.
-새 corpus(`stores_v003`, 214,043개 매장)에는 store_id가 상당수 달라 그대로 재사용할 수 없습니다.
+## Query family 원본
+
+`configs/benchmark/query_families_v1.yaml`은 손으로 편집하는 파일이 아니라
+`scripts/import_queryset_xlsx.py`가 `data/query/queryset_final.xlsx`(팀이 작성한 최종 질의
+시트)로부터 생성합니다. 질의를 추가/수정하려면 xlsx를 고친 뒤 이 스크립트를 다시 돌리세요
+(자세한 절차는 스크립트 상단 docstring 참고). yaml을 직접 고치면 다음 xlsx 재실행 때 덮어써집니다.

@@ -51,20 +51,25 @@ src/store_search_ai/
   models/                        임베딩 인코더 (BEIR 스타일, docs/MODELING.md 참고)
   retrieval/exact_search.py      exact cosine 검색 (ANN 이전 단계 모델 비교용)
 scripts/01_*.py ~ scripts/18_*.py   파이프라인 본체 (docs/PIPELINE.md 참고)
+scripts/import_queryset_xlsx.py    data/query/queryset_final.xlsx → query_families_v1.yaml 변환기(번호 없음, 05 이전에 1회성 실행)
+scripts/prepare_finetune_dataset.py  train qrels+corpus → fine-tuning용 jsonl (번호 없음, docs/TRAINING.md 참고)
 data/
   raw/stores_20260907.xlsx       원본 전국 데이터 (수정 금지)
+  query/queryset_final.xlsx      팀이 작성한 최종 query family/질의 원본 (수정 금지, import_queryset_xlsx.py가 읽음)
   interim/ processed/ registry/  전처리 중간/최종 산출물 (registry 제외 전부 재생성 가능)
   corpus/store_corpus_v002.parquet   검색 대상 corpus (T1/T2/T3 템플릿 포함)
+  finetune/train_pairs.jsonl     fine-tuning 학습쌍 (prepare_finetune_dataset.py 산출물, 재생성 가능)
 benchmark/storesearch_ko_v1/
   queries.csv, annotation_guideline.md, qrels*.csv/.trec, benchmark_manifest.json
-archive/legacy_v002_benchmark/ 대전/세종 13,832개 매장 기준 과거 사람 라벨링 결과물 (참고용, 코드에서 안 씀)
 archive/rule_based_train_labeling/ 한때 썼던 규칙 기반 train 자동 라벨링 스크립트 (재현율 문제로 보류, 참고용)
+models/                         fine-tuned 모델 가중치 (.gitignore 처리 — Colab에서 내려받은 걸 로컬에 둠)
 tests/                          단위 테스트 (pytest)
-colab/                          Colab(GPU)에서 임베딩 모델 인코딩하는 스크립트 (colab/README.md 참고)
+colab/                          Colab(GPU)에서 임베딩 모델 인코딩/학습하는 스크립트 (colab/README.md 참고)
 docs/
   PIPELINE.md                    18단계 실행 순서·인자·사람 개입 지점 (필독)
   EXTENDING_DATA.md               raw 데이터 확장 / query family 재정의 방법
   MODELING.md                    임베딩 모델 zero-shot 비교 구조 (BEIR 스타일)
+  TRAINING.md                    Colab에서 fine-tuning 하는 방법 (Qwen3=ms-swift/LoRA, 나머지=sentence-transformers)
 ```
 
 ## 빠른 시작
@@ -109,8 +114,8 @@ python scripts/04_build_corpus.py
 | 14 | `14_build_qrels.py` | 없음 | train + val/test(모두 사람) 병합 → 최종 qrels |
 | 15 | `15_validate_benchmark.py` | 없음 | 무결성 검증 |
 | 16 | `16_evaluate_run.py` | 없음 | 공식 evaluator (nDCG@10 등) |
-| 17 | `17_run_zero_shot_eval.py` | 없음(GPU 필요) | 임베딩 모델 인코딩 → 검색 → 16번 호출 |
-| 18 | `18_score_zero_shot_runs.py` | 없음 | 여러 run을 모아 리더보드 생성 |
+| 17 | `17_run_model_eval.py` | 없음(GPU 필요) | 임베딩 모델(zero-shot/fine-tuned 공통) 인코딩 → 검색 → 16번 호출 |
+| 18 | `18_score_model_runs.py` | 없음 | 여러 run을 모아 리더보드 생성 |
 
 01~07은 사람 개입 없이 끝까지 자동 재실행됩니다(`make pool`). 08~13은 calibration + train/val/test 본
 애노테이션 + adjudication을 위한 실제 사람 작업이 필요한 구간입니다 — 이 구간을 건너뛰고 자동으로

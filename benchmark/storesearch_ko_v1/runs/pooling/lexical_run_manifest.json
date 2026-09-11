@@ -12,31 +12,31 @@
   "run_stats": [
     {
       "system": "char_tfidf_v1",
-      "queries": 152,
-      "queries_with_results": 152,
-      "queries_without_results": 0,
-      "run_rows": 6080,
-      "mean_results_per_query": 40.0,
+      "queries": 548,
+      "queries_with_results": 546,
+      "queries_without_results": 2,
+      "run_rows": 21807,
+      "mean_results_per_query": 39.793795620437955,
       "max_results_per_query": 40,
       "zero_or_negative_score_rows": 0
     },
     {
       "system": "word_tfidf_v1",
-      "queries": 152,
-      "queries_with_results": 147,
-      "queries_without_results": 5,
-      "run_rows": 4931,
-      "mean_results_per_query": 32.44078947368421,
+      "queries": 548,
+      "queries_with_results": 451,
+      "queries_without_results": 97,
+      "run_rows": 14896,
+      "mean_results_per_query": 27.182481751824817,
       "max_results_per_query": 40,
       "zero_or_negative_score_rows": 0
     },
     {
       "system": "bm25_regex_v1",
-      "queries": 152,
-      "queries_with_results": 147,
-      "queries_without_results": 5,
-      "run_rows": 4931,
-      "mean_results_per_query": 32.44078947368421,
+      "queries": 548,
+      "queries_with_results": 451,
+      "queries_without_results": 97,
+      "run_rows": 14897,
+      "mean_results_per_query": 27.184306569343065,
       "max_results_per_query": 40,
       "zero_or_negative_score_rows": 0
     }

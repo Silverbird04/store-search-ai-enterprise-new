@@ -89,8 +89,8 @@ def main() -> None:
         seen_families.add(name)
         if split not in {"train", "val", "test"}:
             raise ValueError(f"Invalid split for {name}: {split}")
-        if len(family["queries"]) < 3:
-            raise ValueError(f"Family must have >=3 query variants: {name}")
+        if len(family["queries"]) < 1:
+            raise ValueError(f"Family must have >=1 query variant: {name}")
 
         for i, item in enumerate(family["queries"], start=1):
             query = str(item["text"]).strip()
