@@ -66,7 +66,7 @@ VSCode 프로젝트와 완전히 동일한 파일(같은 corpus, 같은 queries.
 import pandas as pd
 
 CORPUS_PATH = PROJECT_DIR / "data" / "corpus" / "store_corpus_v002.parquet"
-QUERY_PATH = PROJECT_DIR / "benchmark" / "storesearch_ko_v1" / "queries.csv"
+QUERY_PATH = PROJECT_DIR / "queries.csv"
 
 corpus = pd.read_parquet(CORPUS_PATH)
 queries = pd.read_csv(QUERY_PATH, encoding="utf-8-sig")
@@ -79,17 +79,20 @@ assert corpus["doc_id"].nunique() == len(corpus)
 print("Unique docs:", corpus["doc_id"].nunique())
 
 TEXT_COLUMNS = {
-    "t1": "search_text_t1_minimal",
-    "t2": "search_text_t2_market",
-    "t3": "search_text_t3_market_type",
+    "t1_minimal": "search_text_t1_minimal",
+    "t2_market": "search_text_t2_market",
+    "t3_market_type": "search_text_t3_market_type",
 }
 
 # ==========================================================
-# 여기 두 개만 바꾸면 된다: 어떤 split을 평가할지, 어떤 template들을 시도할지
+# 여기 세 개만 바꾸면 된다: 어떤 split을 평가할지, 어떤 template들을 시도할지,
 # (val은 모델 선정용, test는 최종 후보 확정 후 딱 한 번만 — docs/PIPELINE.md 참고)
+# corpus 인코딩(214k 문서)이 template마다 매번 다시 도는 게 가장 비싼 부분이라,
+# 처음엔 T1(공식 document representation, docs/PIPELINE.md 1절)만 빠르게 돌려보고
+# 필요할 때만 T2/T3를 추가하는 걸 권장한다.
 # ==========================================================
 SPLIT = "val"
-TEMPLATES = ["t1", "t2", "t3"]
+TEMPLATES = ["t1_minimal"]  # 필요해지면 "t2_market", "t3_market_type" 추가
 
 split_queries = queries[
     (queries["split"] == SPLIT) & (queries["status"] == "active")
@@ -100,12 +103,24 @@ print(split_queries[["query_id", "query_family", "query_type", "query"]].head(10
 
 """## 모델 목록 (configs/models/*.yaml에서 그대로 읽는다)
 
-모델을 추가/제외하려면 이 리스트가 아니라 `configs/models/*.yaml`을 고치면 된다 —
-Colab과 VSCode가 같은 설정을 보게 하기 위함이다 (docs/EXTENDING_DATA.md 방식과 동일한 원칙).
+기본은 `configs/models/*.yaml` 전부를 순회한다(정식 비교용 — 이 리스트를 영구히 바꾸려면
+이 셀이 아니라 yaml 파일 자체를 추가/삭제할 것, docs/EXTENDING_DATA.md 방식과 동일한 원칙).
+
+**일단 1~2개 모델로만 빠르게 찍어보고 싶으면** `MODEL_CONFIG_NAMES`에 파일명을 적는다 —
+corpus 인코딩이 모델마다 다시 도는 게 비싼 부분이라, 처음엔 이렇게 좁혀서 배관/성능을
+확인한 뒤 나머지 모델로 넓히는 걸 권장한다.
 """
 
 MODEL_CONFIG_DIR = PROJECT_DIR / "configs" / "models"
-model_config_paths = sorted(MODEL_CONFIG_DIR.glob("*.yaml"))
+
+MODEL_CONFIG_NAMES = None  # 예: ["bge_m3.yaml", "qwen3_0_6b.yaml"] — None이면 전체
+
+if MODEL_CONFIG_NAMES:
+    model_config_paths = [MODEL_CONFIG_DIR / name for name in MODEL_CONFIG_NAMES]
+    missing = [p for p in model_config_paths if not p.exists()]
+    assert not missing, f"찾을 수 없는 모델 설정: {missing}"
+else:
+    model_config_paths = sorted(MODEL_CONFIG_DIR.glob("*.yaml"))
 
 print("발견된 모델 설정:")
 for p in model_config_paths:
@@ -199,7 +214,7 @@ custom_query_embeddings = encoder.model.encode(
 )
 
 doc_embeddings = encoder.encode_corpus(
-    corpus[TEXT_COLUMNS["t1"]].fillna("").astype(str).tolist()
+    corpus[TEXT_COLUMNS["t1_minimal"]].fillna("").astype(str).tolist()
 )
 searcher = ExactCosineSearch(doc_embeddings, corpus["doc_id"].tolist())
 run = searcher.search(

@@ -42,7 +42,7 @@ nDCG/Recall/Precision/MRR을 여러 곳에서 각자 재구현하면 언젠가 �
 전체 절차가 있습니다. 요약하면: VSCode 프로젝트의 `src/`, `configs/models/`, corpus, queries.csv를
 Drive에 올려두고, `colab/run_model_eval_encoding.py`가 **같은 `SentenceTransformerEncoder`/
 `ExactCosineSearch`**로 인코딩·검색해서 `run.csv`를 만듭니다. 그 파일을 `results/model_eval/`로
-가져오면, 아래 로컬 명령과 완전히 동일하게 채점됩니다.
+가져오면, 아래 로컬 명령과 완전히 동일하게 채점됩니다. 자세한 사항은 `colab/README.md` 참고하세요.
 
 **로컬에 GPU가 있는 경우**:
 
@@ -52,7 +52,7 @@ python scripts/17_run_model_eval.py --dummy --split val
 
 # 실제 모델 비교 (pip install -e ".[embedding]" 먼저 필요 — torch/sentence-transformers)
 python scripts/17_run_model_eval.py --model-config configs/models/bge_m3.yaml --split val
-python scripts/17_run_model_eval.py --model-config configs/models/kure_v1.yaml --split val
+python scripts/17_run_model_eval.py --model-config configs/models/qwen3_0_6b.yaml --split val
 ```
 
 각 실행은 `results/model_eval/<모델명>/run_<template>_<split>.csv`를 만듭니다. 모델이 여러 개

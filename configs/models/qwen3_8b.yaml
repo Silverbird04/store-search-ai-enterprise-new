@@ -1,6 +1,0 @@
-name: qwen3_embedding_8b
-model_id: Qwen/Qwen3-Embedding-8B
-query_prompt_name: query
-normalize_embeddings: true
-target_dimension: 1024
-batch_size: 4

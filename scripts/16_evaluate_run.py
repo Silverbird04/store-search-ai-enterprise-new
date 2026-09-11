@@ -1,12 +1,36 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 from pathlib import Path
 
-import ir_measures
 import numpy as np
 import pandas as pd
+
+# ir_measures.util.parse_measure() (used for specs like "P(rel=2)@10") walks
+# a parsed AST and checks `isinstance(node, ast.Num)` — removed in Python 3.12
+# (superseded by ast.Constant back in 3.8). Rather than pin the whole project
+# to Python <3.12 just for this, patch the one broken helper before anything
+# imports/uses it. Safe to remove once ir_measures ships a real fix upstream.
+if not hasattr(ast, "Num"):
+    import ir_measures.util as _ir_util
+
+    def _ast_to_value_compat(node):
+        if isinstance(node, ast.Constant):
+            return node.value
+        if isinstance(node, ast.Dict):
+            return dict(
+                zip(
+                    map(_ast_to_value_compat, node.keys),
+                    map(_ast_to_value_compat, node.values),
+                )
+            )
+        raise ValueError("values must be str, float, int, bool, etc.")
+
+    _ir_util._ast_to_value = _ast_to_value_compat
+
+import ir_measures
 
 
 # ============================================================
@@ -49,7 +73,13 @@ def load_qrels(path: Path):
         # NOTE: ir_measures.read_trec_qrels() returns a one-shot generator.
         # calculate_metrics() below consumes qrels twice (aggregate + per-query),
         # so it must be materialized into a list here.
-        return list(ir_measures.read_trec_qrels(str(path)))
+        # NOTE: passing a path string makes ir_measures open() the file with the
+        # OS locale encoding (cp949 on Korean Windows), which breaks on the
+        # Korean characters in our query_id (e.g. "q_치킨_01"). Open it ourselves
+        # as UTF-8 and hand over the file object instead (read_trec_qrels reads
+        # file-like objects as-is without re-opening them).
+        with path.open("r", encoding="utf-8") as f:
+            return list(ir_measures.read_trec_qrels(f))
 
     if path.suffix.lower() == ".csv":
         df = pd.read_csv(path, encoding="utf-8-sig")
@@ -119,8 +149,10 @@ def load_run(path: Path):
         raise FileNotFoundError(f"Run file not found: {path}")
 
     if path.suffix.lower() == ".trec":
-        # Same reasoning as load_qrels(): materialize the generator.
-        return list(ir_measures.read_trec_run(str(path)))
+        # Same reasoning as load_qrels(): materialize the generator, and open
+        # as UTF-8 ourselves to avoid the OS-locale-encoding trap on Korean query_id.
+        with path.open("r", encoding="utf-8") as f:
+            return list(ir_measures.read_trec_run(f))
 
     if path.suffix.lower() == ".csv":
         df = pd.read_csv(path, encoding="utf-8-sig")

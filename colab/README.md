@@ -66,7 +66,7 @@ python scripts/18_score_model_runs.py --split val
 
 ```bash
 python scripts/16_evaluate_run.py --qrels benchmark/storesearch_ko_v1/qrels_val.trec \
-    --run results/model_eval/bge_m3/run_t1_val.csv --tag bge_m3_t1_val
+    --run results/model_eval/bge_m3/run_t1_minimal_val.csv --tag bge_m3_t1_val
 ```
 
 ## 로컬에 GPU가 있다면
