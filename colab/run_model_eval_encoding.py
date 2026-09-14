@@ -6,7 +6,7 @@ Colab에서 실행: 모델 로드 → corpus/query 인코딩 → exact cosine �
 `docs/TRAINING.md` 참고)이든 완전히 같은 코드로 처리한다 — 그래서 폴더/스크립트 이름에
 "zero_shot"을 쓰지 않는다.
 채점(scores)은 여기서 하지 않는다 — run.csv를 VSCode 프로젝트로 가져가서
-`scripts/18_score_model_runs.py`(공식 evaluator)로 한다. 이유는
+`scripts/15_score_model_runs.py`(공식 evaluator)로 한다. 이유는
 docs/MODELING.md의 "왜 이렇게 나눴는가" 참고: metric 계산은 한 곳에서만 한다.
 
 사용 전 준비 (한 번만):
@@ -66,7 +66,7 @@ VSCode 프로젝트와 완전히 동일한 파일(같은 corpus, 같은 queries.
 import pandas as pd
 
 CORPUS_PATH = PROJECT_DIR / "data" / "corpus" / "store_corpus_v002.parquet"
-QUERY_PATH = PROJECT_DIR / "queries.csv"
+QUERY_PATH = PROJECT_DIR / "benchmark" / "storesearch_ko_v1" / "queries.csv"
 
 corpus = pd.read_parquet(CORPUS_PATH)
 queries = pd.read_csv(QUERY_PATH, encoding="utf-8-sig")

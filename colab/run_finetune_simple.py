@@ -13,12 +13,15 @@ negative를 InputExample(texts=[query, positive, *negatives])로 그대로 넣�
 사용 전 준비 (한 번만):
   1. 로컬에서 `python scripts/prepare_finetune_dataset.py`로 data/finetune/train_pairs.jsonl 생성
   2. Drive에 아래 업로드:
+       project/src/store_search_ai/   (model_manifest.json 기록용, 그대로 폴더째)
        project/data/finetune/train_pairs.jsonl
        project/configs/models/<베이스모델>.yaml   (예: arctic_ko.yaml, bge_m3.yaml)
-  3. 이 스크립트를 Colab에서 실행 (MODEL_CONFIG_PATH만 바꾸면 됨)
-  4. 끝나면 Drive의 runs/finetune/<태그>/ 를 로컬 models/ 밑으로 내려받고,
+  3. 이 스크립트를 Colab에서 실행 (MODEL_CONFIG_PATH만 바꾸면 됨) — 끝나면 OUTPUT_DIR에
+     `model_manifest.json`도 같이 저장된다(base 모델, 하이퍼파라미터, 학습 데이터 sha256 등).
+  4. 끝나면 Drive의 runs/finetune/<태그>/ 를 로컬 models/ 밑으로 내려받고(manifest 포함),
      configs/models/<태그>.yaml을 새로 만들어 model_id를 그 로컬 경로로 지정한 뒤
-     scripts/17_run_model_eval.py --model-config configs/models/<태그>.yaml --split val 로 평가
+     scripts/14_run_model_eval.py --model-config configs/models/<태그>.yaml --split val 로 평가
+     (평가 결과가 자동으로 model_manifest.json의 evaluations 목록에 추가된다)
 """
 
 import torch
@@ -43,7 +46,7 @@ FINETUNE_RUN_DIR.mkdir(parents=True, exist_ok=True)
 
 sys.path.insert(0, str(PROJECT_DIR / "src"))
 
-from store_search_ai.pipeline.common import load_config
+from store_search_ai.pipeline.common import load_config, sha256_file, write_model_manifest
 
 TRAIN_PAIRS_PATH = PROJECT_DIR / "data" / "finetune" / "train_pairs.jsonl"
 
@@ -100,6 +103,28 @@ model.fit(
     output_path=str(OUTPUT_DIR),
 )
 
+manifest_path = write_model_manifest(
+    OUTPUT_DIR,
+    {
+        "tag": TAG,
+        "base_model_id": model_config["model_id"],
+        "framework": "sentence-transformers",
+        "hyperparameters": {
+            "loss": "MultipleNegativesRankingLoss",
+            "num_epochs": NUM_EPOCHS,
+            "batch_size": BATCH_SIZE,
+            "warmup_ratio": WARMUP_RATIO,
+        },
+        "training_data": {
+            "source": str(TRAIN_PAIRS_PATH),
+            "sha256": sha256_file(TRAIN_PAIRS_PATH),
+            "num_examples": len(train_examples),
+        },
+    },
+)
+
 print(f"\n[완료] fine-tuned 모델 저장: {OUTPUT_DIR}")
-print("이 폴더를 로컬 models/<태그>/로 내려받은 뒤, configs/models/<태그>.yaml에서")
-print("model_id를 그 로컬 경로로 지정하고 scripts/17_run_model_eval.py로 평가하세요.")
+print(f"[완료] model_manifest.json: {manifest_path}")
+print("이 폴더를 로컬 models/<태그>/로 내려받은 뒤(model_manifest.json 포함),")
+print("configs/models/<태그>.yaml에서 model_id를 그 로컬 경로로 지정하고")
+print("scripts/14_run_model_eval.py로 평가하세요 (평가 결과가 자동으로 manifest에 추가됩니다).")

@@ -33,7 +33,7 @@ class ExactCosineSearch:
     ) -> pd.DataFrame:
         """query_embeddings(정규화되어 있다고 가정) x corpus를 전수 비교해 top-k run을 만든다.
 
-        반환 스키마는 공식 evaluator(`scripts/16_evaluate_run.py`)가 요구하는
+        반환 스키마는 공식 evaluator(`scripts/13_evaluate_run.py`)가 요구하는
         `query_id,doc_id,rank,score,system`과 동일하다.
         """
 

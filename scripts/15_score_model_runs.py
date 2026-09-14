@@ -1,15 +1,15 @@
 """results/model_eval/*/run_*_<split>.csv 를 한 번에 공식 evaluator로 채점해서 리더보드를 만든다.
 
-zero-shot 모델과 fine-tuned 모델의 run이 섞여 있어도 상관없다 — `17_run_model_eval.py`가
+zero-shot 모델과 fine-tuned 모델의 run이 섞여 있어도 상관없다 — `14_run_model_eval.py`가
 어떤 모델이든 같은 스키마의 run.csv를 만들기 때문에 이 스크립트는 구분하지 않는다.
 Colab에서 여러 모델 x 여러 template(t1/t2/t3)로 run을 만들어 오면, 하나씩
-`16_evaluate_run.py`를 손으로 돌리는 대신 이 스크립트로 한 번에 비교한다.
-채점 로직은 재구현하지 않고 `16_evaluate_run.py`를 서브프로세스로 그대로 호출한다
+`13_evaluate_run.py`를 손으로 돌리는 대신 이 스크립트로 한 번에 비교한다.
+채점 로직은 재구현하지 않고 `13_evaluate_run.py`를 서브프로세스로 그대로 호출한다
 (docs/MODELING.md의 "왜 이렇게 나눴는가" 원칙과 동일).
 
 사용 예:
-    python scripts/18_score_model_runs.py --split val
-    python scripts/18_score_model_runs.py --split val --results-dir results/model_eval
+    python scripts/15_score_model_runs.py --split val
+    python scripts/15_score_model_runs.py --split val --results-dir results/model_eval
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ def main() -> None:
             "Colab에서 만든 run을 이 폴더로 복사했는지 확인하세요."
         )
 
-    evaluate_script = Path(__file__).with_name("16_evaluate_run.py")
+    evaluate_script = Path(__file__).with_name("13_evaluate_run.py")
     rows = []
 
     for tag, template, run_path in runs:

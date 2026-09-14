@@ -1,10 +1,10 @@
 """annotation_A_all.csv / annotation_B_val_test.csv를 채운 결과를
 
-`12_prepare_full_annotations.py`가 기대하는 5개 split별 완료 파일로 쪼갠다.
+`09_prepare_full_annotations.py`가 기대하는 5개 split별 완료 파일로 쪼갠다.
 
-왜 필요한가: `11_make_full_annotation_sheets.py`는 애노테이터가 작업하기 편하도록 A용
+왜 필요한가: `08_make_full_annotation_sheets.py`는 애노테이터가 작업하기 편하도록 A용
 `annotation_A_all.csv`(train+val+test 전체 한 파일), B용 `annotation_B_val_test.csv`
-(val+test 한 파일)를 만든다. 하지만 `12_prepare_full_annotations.py`는 split별로 분리된
+(val+test 한 파일)를 만든다. 하지만 `09_prepare_full_annotations.py`는 split별로 분리된
 `annotation_A_train_completed.csv`/`annotation_A_val_completed.csv`/`annotation_A_test_completed.csv`/
 `annotation_B_val_completed.csv`/`annotation_B_test_completed.csv` 5개를 읽는다(각 split을
 독립적으로 검증하기 위함). 이 스크립트가 그 변환을 대신한다 — "split" 컬럼 값으로 행을 나눠서
@@ -75,7 +75,7 @@ def main() -> None:
     split_and_save(b_val_test_path, ["val", "test"], completed_dir, "annotation_B")
 
     print(f"\n[완료] {completed_dir}에 5개 파일 생성. 이어서 실행:")
-    print("  python scripts/12_prepare_full_annotations.py")
+    print("  python scripts/09_prepare_full_annotations.py")
 
 
 if __name__ == "__main__":

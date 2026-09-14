@@ -1,7 +1,7 @@
 """네트워크·GPU 없이 retrieval/evaluation 코드 경로를 검증하기 위한 가짜 인코더.
 
 실제 서비스에는 쓰지 않는다. `SentenceTransformerEncoder`와 동일한 `BaseEncoder` 계약을
-따르므로, `scripts/17_run_model_eval.py`를 이 인코더로 실행하면 실제 모델 다운로드 없이
+따르므로, `scripts/14_run_model_eval.py`를 이 인코더로 실행하면 실제 모델 다운로드 없이
 "corpus 인코딩 → exact search → run.csv → 공식 evaluator" 전체 배관이 올바르게 연결돼
 있는지 확인할 수 있다 (숫자 자체는 무의미하다 — 관련성과 무관한 랜덤 벡터이기 때문).
 """

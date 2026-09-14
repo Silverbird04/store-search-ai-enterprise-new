@@ -17,14 +17,20 @@ embedding 학습 문서)로 실제 플래그명을 확인하고 아래 COMMAND�
 사용 전 준비 (한 번만):
   1. 로컬에서 `python scripts/prepare_finetune_dataset.py`로 data/finetune/train_pairs.jsonl 생성
   2. Drive에 아래 업로드:
+       project/src/store_search_ai/   (model_manifest.json 기록용, 그대로 폴더째)
        project/data/finetune/train_pairs.jsonl
      (모델 자체는 model_id로 HF Hub에서 바로 받으므로 별도 업로드 불필요)
-  3. 이 스크립트를 Colab에서 실행
+  3. 이 스크립트를 Colab에서 실행 — 학습이 끝나면 OUTPUT_DIR에 `model_manifest.json`도
+     같이 저장된다(base 모델, 하이퍼파라미터, 학습 데이터 sha256 등 — 나중에 이 체크포인트가
+     정확히 뭘로 학습된 건지 추적하기 위함. 서비스에 실제로 가져다 쓸 체크포인트라면 이 기록이
+     없으면 재현/검증이 안 된다).
   4. 끝나면 Drive의 runs/finetune/<태그>/ 를 통째로 내려받아 로컬 models/ 밑에 둔다
+     (model_manifest.json도 그 폴더 안에 같이 내려받아진다)
   5. configs/models/<태그>.yaml을 새로 만들어 model_id를 그 로컬 경로로 지정하고,
-     scripts/17_run_model_eval.py --model-config configs/models/<태그>.yaml --split val 로 평가
+     scripts/14_run_model_eval.py --model-config configs/models/<태그>.yaml --split val 로 평가
      (fine-tuning 전용 평가 코드는 따로 없다 — 기존 zero-shot 평가 harness를 그대로 재사용한다.
-      "run을 채점하는 evaluator는 하나만 둔다"는 docs/MODELING.md 원칙과 동일)
+      "run을 채점하는 evaluator는 하나만 둔다"는 docs/MODELING.md 원칙과 동일. 평가 결과는
+      자동으로 model_manifest.json의 evaluations 목록에도 추가된다 — 14_run_model_eval.py 참고)
 """
 
 import torch
@@ -43,12 +49,16 @@ from google.colab import drive
 drive.mount("/content/drive")
 
 import json
+import sys
 from pathlib import Path
 
 DRIVE_ROOT = Path("/content/drive/MyDrive/store-search-ai")
 PROJECT_DIR = DRIVE_ROOT / "project"
 FINETUNE_RUN_DIR = DRIVE_ROOT / "runs" / "finetune"
 FINETUNE_RUN_DIR.mkdir(parents=True, exist_ok=True)
+
+sys.path.insert(0, str(PROJECT_DIR / "src"))
+from store_search_ai.pipeline.common import sha256_file, write_model_manifest
 
 TRAIN_PAIRS_PATH = PROJECT_DIR / "data" / "finetune" / "train_pairs.jsonl"
 
@@ -127,8 +137,36 @@ import subprocess
 
 subprocess.run(command, check=True)
 
+manifest_path = write_model_manifest(
+    OUTPUT_DIR,
+    {
+        "tag": TAG,
+        "base_model_id": MODEL_ID,
+        "framework": "ms-swift+lora",
+        "hyperparameters": {
+            "train_type": "lora",
+            "lora_rank": LORA_RANK,
+            "lora_alpha": LORA_ALPHA,
+            "num_train_epochs": NUM_EPOCHS,
+            "per_device_train_batch_size": BATCH_SIZE,
+            "quantization": "bnb_4bit" if USE_4BIT else None,
+            "loss_type": "infonce",
+        },
+        "training_data": {
+            "source": str(TRAIN_PAIRS_PATH),
+            "sha256": sha256_file(TRAIN_PAIRS_PATH),
+            "num_examples": n,
+        },
+        "notes": (
+            "LoRA adapter만 저장됨 — 평가/서빙 전 베이스 모델과 merge가 필요할 수 있음 "
+            "(swift export --adapters <output_dir> --merge_lora true 등, --help로 확인)."
+        ),
+    },
+)
+
 print(f"\n[완료] 학습 결과: {OUTPUT_DIR}")
+print(f"[완료] model_manifest.json: {manifest_path}")
 print("LoRA adapter만 저장됩니다 — 평가/서빙에 쓰려면 베이스 모델과 merge가 필요할 수 있습니다")
 print("(ms-swift의 `swift export --adapters <output_dir> --merge_lora true` 등을 --help로 확인).")
-print("merge된(또는 adapter) 모델 폴더를 로컬 models/<태그>/로 내려받은 뒤,")
+print("merge된(또는 adapter) 모델 폴더를 로컬 models/<태그>/로 내려받은 뒤(model_manifest.json 포함),")
 print("configs/models/<태그>.yaml에서 model_id를 그 로컬 경로로 지정하세요.")

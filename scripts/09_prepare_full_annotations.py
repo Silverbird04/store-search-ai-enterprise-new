@@ -454,6 +454,41 @@ def main() -> None:
         encoding="utf-8",
     )
 
+    # val+test 전체를 합친 이중 라벨링 커버리지/합치도. calibration(구 08~10, 삭제됨)이 예전에
+    # 만들던 것과 같은 스키마로 benchmark_dir 바로 밑에 써서 12_validate_benchmark.py
+    # --stage final이 그대로 읽게 한다(그 스크립트는 파일 스키마만 보고 누가 만들었는지는 모른다).
+    threshold = int(config["relevance"]["binary_threshold"])
+    combined = pd.concat([val_merged, test_merged], ignore_index=True)
+    valid_mask = combined["valid_A"] & combined["valid_B"]
+    v = combined.loc[valid_mask]
+    ar = v["relevance_A"].astype(int)
+    br = v["relevance_B"].astype(int)
+
+    agreement_report = {
+        "human_double_annotation_required_rows": int(len(combined)),
+        "human_double_annotation_completed_rows": int(valid_mask.sum()),
+        "double_annotation_coverage": (
+            float(valid_mask.sum()) / len(combined) if len(combined) else 1.0
+        ),
+        "exact_agreement": float((ar.to_numpy() == br.to_numpy()).mean()) if len(ar) else None,
+        "binary_agreement_rel_ge_threshold": (
+            float(((ar.to_numpy() >= threshold) == (br.to_numpy() >= threshold)).mean())
+            if len(ar)
+            else None
+        ),
+        "unweighted_cohen_kappa": float(cohen_kappa_score(ar, br)) if len(ar) else None,
+        "quadratic_weighted_cohen_kappa": (
+            float(cohen_kappa_score(ar, br, weights="quadratic")) if len(ar) else None
+        ),
+        "rows_needing_adjudication": int(combined["needs_adjudication"].sum()),
+        "binary_relevance_threshold": threshold,
+    }
+
+    (benchmark_dir / "agreement_report.json").write_text(
+        json.dumps(agreement_report, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
     print(
         "========== FULL ANNOTATION PREP COMPLETE =========="
     )

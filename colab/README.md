@@ -14,7 +14,7 @@
                               ◀──
 3. Drive의 runs/model_eval/ 를
    results/model_eval/ 에 그대로 복사
-4. scripts/18_score_model_runs.py
+4. scripts/15_score_model_runs.py
    로 전체 채점 → 리더보드
 ```
 
@@ -56,23 +56,22 @@ Drive의 `store-search-ai/runs/model_eval/`를 통째로 내려받아 로컬 프
 ## 4. VSCode에서 채점
 
 ```bash
-python scripts/18_score_model_runs.py --split val
+python scripts/15_score_model_runs.py --split val
 ```
 
-`results/model_eval/*/run_*_val.csv`를 전부 찾아서 공식 evaluator(`scripts/16_evaluate_run.py`)로
+`results/model_eval/*/run_*_val.csv`를 전부 찾아서 공식 evaluator(`scripts/13_evaluate_run.py`)로
 채점하고, `results/model_eval/leaderboard_val.csv`에 nDCG@10 기준 정렬된 비교표를 남깁니다.
 
 모델 하나만 빠르게 확인하고 싶으면 기존처럼:
 
 ```bash
-python scripts/16_evaluate_run.py --qrels benchmark/storesearch_ko_v1/qrels_val.trec \
+python scripts/13_evaluate_run.py --qrels benchmark/storesearch_ko_v1/qrels_val.trec \
     --run results/model_eval/bge_m3/run_t1_minimal_val.csv --tag bge_m3_t1_val
 ```
 
 ## 로컬에 GPU가 있다면
 
-Colab 없이 `scripts/17_run_model_eval.py`를 로컬에서 바로 실행해도 됩니다 (`pip install -e
-".[embedding]"` 필요). 폴더 구조와 스키마가 동일하므로 `scripts/18_score_model_runs.py`은
+Colab 없이 `scripts/14_run_model_eval.py`를 로컬에서 바로 실행해도 됩니다 (`pip install -e".[embedding]"` 필요). 폴더 구조와 스키마가 동일하므로 `scripts/15_score_model_runs.py`은
 Colab 결과와 로컬 결과를 구분 없이 함께 채점합니다.
 
 ## Zero-shot 다음 단계: Fine-tuning
@@ -81,5 +80,5 @@ zero-shot 비교로 후보 모델을 추린 뒤에는 실제로 학습을 시켜
 `colab/run_finetune_qwen3.py`(Qwen3-Embedding, ms-swift+LoRA), `colab/run_finetune_simple.py`
 (Snowflake Arctic/BGE 등, sentence-transformers) 두 스크립트가 있고, 학습 데이터는 로컬에서
 `python scripts/prepare_finetune_dataset.py`로 미리 만들어 Drive에 올립니다. Fine-tuned 모델도
-`run_model_eval_encoding.py`/`17_run_model_eval.py`로 zero-shot 모델과 완전히 동일하게 평가됩니다
+`run_model_eval_encoding.py`/`14_run_model_eval.py`로 zero-shot 모델과 완전히 동일하게 평가됩니다
 (그래서 이 문서/스크립트들 이름에 "zero_shot"을 쓰지 않습니다).

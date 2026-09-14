@@ -1,8 +1,8 @@
 """qrels_train + queries.csv + corpus로부터 임베딩 모델 fine-tuning용 학습쌍을 만든다.
 
-파이프라인 번호가 없는 이유: 01~18 실행 순서와 무관하게, train qrels가 준비된 뒤
-(`docs/PIPELINE.md` 5절, `12_prepare_full_annotations.py`가 만드는
-`qrels/provisional_v1/qrels_train_provisional.csv` 또는 `14_build_qrels.py`가 만드는
+파이프라인 번호가 없는 이유: 01~15 실행 순서와 무관하게, train qrels가 준비된 뒤
+(`docs/PIPELINE.md` 4절, `09_prepare_full_annotations.py`가 만드는
+`qrels/provisional_v1/qrels_train_provisional.csv` 또는 `11_build_qrels.py`가 만드는
 최종 `qrels_train.csv`) 필요할 때마다 로컬(GPU 불필요)에서 실행하는 데이터 준비 도구다.
 결과 jsonl을 Colab으로 올려서 `colab/run_finetune_*.py`가 그대로 읽는다.
 
@@ -54,8 +54,8 @@ def resolve_train_qrels_path(benchmark_dir: Path) -> Path:
         return provisional_path
     raise SystemExit(
         f"train qrels를 찾을 수 없습니다: {final_path} 또는 {provisional_path}. "
-        "docs/PIPELINE.md 5절(11_make_full_annotation_sheets.py -> 사람이 채움 -> "
-        "12_prepare_full_annotations.py)을 먼저 진행하세요."
+        "docs/PIPELINE.md 4절(08_make_full_annotation_sheets.py -> 사람이 채움 -> "
+        "09_prepare_full_annotations.py)을 먼저 진행하세요."
     )
 
 

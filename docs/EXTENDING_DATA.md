@@ -69,7 +69,7 @@ yaml은 생성된 산출물입니다** — yaml을 직접 손으로 고쳐도 �
 # 2. 변환 + 재검증
 python scripts/import_queryset_xlsx.py
 python scripts/05_init_benchmark.py
-python scripts/15_validate_benchmark.py --stage pilot
+python scripts/12_validate_benchmark.py --stage pilot
 ```
 
 `import_queryset_xlsx.py`가 하는 일(스크립트 상단 docstring에 상세 설명):
@@ -87,7 +87,7 @@ yaml이 생성하는 각 family의 구조는 다음과 같습니다(참고용 �
 
 ```yaml
 - family: chicken              # family 이름 (영문, snake_case, 전체 파일 내에서 유일해야 함)
-  split: train                 # train / val / test 중 하나. 같은 family가 두 split에 걸치면 안 됨(leakage 방지, 15_validate_benchmark.py가 검사)
+  split: train                 # train / val / test 중 하나. 같은 family가 두 split에 걸치면 안 됨(leakage 방지, 12_validate_benchmark.py가 검사)
   intent_definition: 조리된 치킨·통닭류를 판매하는 음식점   # 애노테이터에게 보여줄 의도 설명 (모델 입력 아님)
   positive_terms: [치킨, 통닭, 치킨전문점, 닭강정]          # pooling 시 targeted term-match 채널(경계 사례 발굴용) — relevance는 사람이 직접 판정
   boundary_terms: [생닭, 닭고기, 육계]                     # 경계 사례 pooling 채널 — relevance는 사람이 직접 판정
@@ -104,7 +104,7 @@ yaml이 생성하는 각 family의 구조는 다음과 같습니다(참고용 �
 
 **주의**: `positive_terms`/`boundary_terms`는 pooling 후보 발굴(targeted term-match 채널, 경계 사례
 채널)에만 쓰입니다. train/val/test 모두 relevance는 **사람이 직접 판정**합니다(`docs/PIPELINE.md`
-4~6절) — 이 두 필드는 relevance 값 자체에는 영향을 주지 않지만, 후보 pool의 구성(무엇이 애노테이터
+4~5절) — 이 두 필드는 relevance 값 자체에는 영향을 주지 않지만, 후보 pool의 구성(무엇이 애노테이터
 앞에 보이는지)에는 영향을 주므로 너무 느슨하거나 너무 좁은 term을 넣으면 pool 품질이 떨어집니다.
 
 `import_queryset_xlsx.py`(및 `05_init_benchmark.py`)가 강제하는 제약:
@@ -117,6 +117,6 @@ yaml이 생성하는 각 family의 구조는 다음과 같습니다(참고용 �
 5. `query_id`는 `q_{family}_{순번:02d}` 형식으로 `05_init_benchmark.py`가 자동 생성
 
 **주의**: query family를 추가/변경하면 pooling(06~07)부터 다시 실행해야 하고, 새로 추가되거나 바뀐
-query는 train/val/test 가릴 것 없이 애노테이션이 전혀 안 되어 있는 상태이므로 `docs/PIPELINE.md` 4~6절
-(calibration은 이미 끝났다면 생략 가능, 본 애노테이션 → adjudication)을 사람이 다시 거쳐야 qrels에
-반영됩니다. 변경 전 family의 기존 완료 라벨은 그대로 재사용되고, 새/변경 query만 다시 라벨링하면 됩니다.
+query는 train/val/test 가릴 것 없이 애노테이션이 전혀 안 되어 있는 상태이므로 `docs/PIPELINE.md` 4~5절
+(본 애노테이션 → adjudication)을 사람이 다시 거쳐야 qrels에 반영됩니다. 변경 전 family의 기존 완료
+라벨은 그대로 재사용되고, 새/변경 query만 다시 라벨링하면 됩니다.

@@ -12,8 +12,8 @@ GUIDELINE = """# StoreSearch-KO v1 Annotation Guideline
 
 ## 적용 범위
 이 가이드라인은 train/val/test 모두에 적용됩니다. train은 애노테이터 1명의 단일 라벨링
-(`11_make_full_annotation_sheets.py`), val/test는 사람 2명의 이중 라벨링 + adjudication을
-거쳐 확정됩니다(`docs/PIPELINE.md` 4~6절).
+(`08_make_full_annotation_sheets.py`), val/test는 사람 2명의 이중 라벨링 + adjudication을
+거쳐 확정됩니다(`docs/PIPELINE.md` 4~5절).
 
 ## 목적
 사용자 Query에 대해 각 매장이 검색 결과로 얼마나 적절한지 0~3의 graded relevance로 평가한다.

@@ -1,8 +1,7 @@
 # StoreSearch-KO v1 — 파이프라인 실행 순서
 
-`scripts/01_*.py` ~ `scripts/18_*.py`를 어떤 순서·인자로 실행해야 하는지 정의합니다. 번호 = 실행 순서.
-**09번(`09_merge_calibration_annotations.py`)만 파이프라인에서 두 번 재사용**됩니다(calibration v1
-병합, calibration v2 병합). 그 외에는 번호=실행 순서=1회 실행입니다.
+`scripts/01_*.py` ~ `scripts/15_*.py`를 어떤 순서·인자로 실행해야 하는지 정의합니다. 번호 = 실행
+순서 = 1회 실행입니다.
 
 ## 0. 환경 준비 (최초 1회)
 
@@ -12,7 +11,8 @@ source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 ```
 
-Python 3.11만 지원합니다 (`ir-measures`가 Python 3.12+에서 제거된 `ast.Num`을 사용).
+`scripts/13_evaluate_run.py`에 Python 3.12+ 호환 shim이 들어있어서(구버전 `ir-measures`가 3.12에서
+제거된 `ast.Num`을 쓰는 문제 우회) 3.11 고정은 아니지만, 검증은 3.11 기준으로 이뤄졌습니다.
 
 ## 1. 데이터 전처리 ~ Corpus 구축 (사람 개입 없음, 전부 재실행 가능)
 
@@ -45,8 +45,9 @@ python scripts/05_init_benchmark.py
 ```
 
 `configs/benchmark/query_families_v1.yaml`을 읽어 `benchmark/storesearch_ko_v1/queries.csv` +
-`annotation_guideline.md`를 생성합니다. **query family를 직접 정의/수정하려면 이 yaml 파일을 편집하세요**
-(자세한 방법은 `docs/EXTENDING_DATA.md` 참고).
+`annotation_guideline.md`를 생성합니다. **이 yaml은 직접 편집하는 파일이 아니라
+`scripts/import_queryset_xlsx.py`가 `data/query/queryset_final.xlsx`로부터 생성하는 산출물입니다**
+(자세한 방법은 `docs/EXTENDING_DATA.md` 참고, 질의 원본은 문서 하단 "Query family 원본" 참고).
 
 ## 3. Pooling (lexical) — 사람 개입 없음
 
@@ -60,34 +61,10 @@ python scripts/07_build_annotation_pool.py --round lexical_v1
   **이 스크립트는 `--round` 인자로 여러 번 누적 호출 가능**합니다 (예: 나중에 dense retrieval 결과로 pool을
   확장하고 싶다면 `--round dense_round1`로 다시 실행).
 
-## 4. Calibration (애노테이터 간 신뢰도 보정) — **사람 개입 필요**
-
-이 단계는 실제로 2명 이상의 사람이 라벨을 매겨야 합니다. 자동화되지 않습니다.
+## 4. 본 애노테이션 (Full annotation) — **사람 개입 필요**
 
 ```bash
-# v1
-python scripts/08_make_calibration_v1_sheets.py
-# → benchmark/storesearch_ko_v1/calibration/calibration_A_v1.csv, calibration_B_v1.csv 를
-#   두 명의 애노테이터에게 전달 → 각자 relevance 채워서 회수
-
-python scripts/09_merge_calibration_annotations.py \
-  --a <완료된 calibration_A_v1.csv> \
-  --b <완료된 calibration_B_v1.csv>
-# → Cohen's kappa 등 합치도(agreement) 리포트 생성. 기준 미달이면 가이드라인을 보완하고 v2로 진행.
-
-# v2 (v1에서 경계가 불명확했던 family들로 재검증)
-python scripts/10_make_calibration_v2_sheets.py --previous-a <완료된 calibration_A_v1.csv>
-# → calibration_A_v2.csv, calibration_B_v2.csv 배포/회수
-
-python scripts/09_merge_calibration_annotations.py \
-  --a <완료된 calibration_A_v2.csv> \
-  --b <완료된 calibration_B_v2.csv>
-```
-
-## 5. 본 애노테이션 (Full annotation) — **사람 개입 필요**
-
-```bash
-python scripts/11_make_full_annotation_sheets.py
+python scripts/08_make_full_annotation_sheets.py
 ```
 
 - train: 애노테이터 A만 단일 라벨링 — training signal이므로 모델 성능을 "보고"하는 데는 쓰지
@@ -121,53 +98,55 @@ python scripts/split_completed_annotations.py
 이후 공통:
 
 ```bash
-python scripts/12_prepare_full_annotations.py
+python scripts/09_prepare_full_annotations.py
 ```
 
 이 스크립트가 하는 일:
 - train: 단일 라벨을 그대로 provisional qrels로 변환 (`qrels/provisional_v1/qrels_train_provisional.csv`)
 - val/test: A·B 라벨을 비교해서 **일치하는 것은 자동 확정**, **불일치(`needs_adjudication=True`)는 사람이
   봐야 할 목록**을 `analysis/adjudication_val_test_needed_only.csv`로 분리 저장
+- val+test 전체의 이중 라벨링 커버리지/합치도(Cohen's kappa 등)를 `benchmark_dir/agreement_report.json`에
+  저장 — `12_validate_benchmark.py --stage final`이 이 파일을 확인합니다.
 
-## 6. Adjudication (이견 조정) — **사람 개입 필요**
+## 5. Adjudication (이견 조정) — **사람 개입 필요**
 
 `adjudication_val_test_needed_only.csv`를 3rd adjudicator(또는 원 애노테이터 협의)가 검토하여
 `final_relevance`, `human_adjudication_note`, (제외할 경우) `exclude_from_gold`를 채운 뒤
 `adjudication_val_test_needed_only_completed.csv`로 저장합니다.
 
 ```bash
-python scripts/13_apply_adjudication_patch.py \
+python scripts/10_apply_adjudication_patch.py \
   --patch benchmark/storesearch_ko_v1/annotations/full_annotation_v1/analysis/adjudication_val_test_needed_only_completed.csv
 ```
 
 → `adjudication_val_test_full_completed.csv` (전체 val/test 최종 판정: 자동 합의분 + 조정분 병합) 생성.
 
-**주의**: "A/B 점수를 평균 내지 않는다"가 원칙입니다 (`12_prepare_full_annotations.py`가 요약에 명시). 반드시
+**주의**: "A/B 점수를 평균 내지 않는다"가 원칙입니다 (`09_prepare_full_annotations.py`가 요약에 명시). 반드시
 `needs_adjudication=True`인 모든 행을 사람이 확정한 뒤 다음 단계로 넘어가야 합니다.
 
-## 7. 최종 Qrels 빌드 + 검증 + 평가
+## 6. 최종 Qrels 빌드 + 검증 + 평가
 
 ```bash
-python scripts/14_build_qrels.py \
+python scripts/11_build_qrels.py \
   --adjudication benchmark/storesearch_ko_v1/annotations/full_annotation_v1/analysis/adjudication_val_test_full_completed.csv
 
-python scripts/15_validate_benchmark.py --stage final
-python scripts/16_evaluate_run.py --run <모델_run.csv> --tag <실험명>
+python scripts/12_validate_benchmark.py --stage final
+python scripts/13_evaluate_run.py --run <모델_run.csv> --tag <실험명>
 ```
 
-- 14: `queries.csv`(active만) + adjudication 완료본(val/test) + 5절에서 만든 provisional train qrels를
+- 11: `queries.csv`(active만) + adjudication 완료본(val/test) + 4절에서 만든 provisional train qrels를
   합쳐 `qrels_train.csv/.trec`, `qrels_val.csv/.trec`, `qrels_test.csv/.trec`, `qrels.csv/.trec`,
   `benchmark_manifest.json`을 `benchmark/storesearch_ko_v1/` 바로 아래(서브폴더 없이) 생성합니다.
-- 15: 중복/미판정 쿼리/스키마 무결성 검증. `--stage final`에서는 최소 쿼리 수, double annotation
+- 12: 중복/미판정 쿼리/스키마 무결성 검증. `--stage final`에서는 최소 쿼리 수, double annotation
   coverage 등도 검사합니다.
-- 16: 공식 evaluator. `--qrels`(기본값 `qrels_val.trec`), `--run`, `--tag` 필요. Primary metric은
+- 13: 공식 evaluator. `--qrels`(기본값 `qrels_val.trec`), `--run`, `--tag` 필요. Primary metric은
   `nDCG@10`, bootstrap 95% CI 포함.
 
-## 8. 모델 평가 — zero-shot 비교, 이후 fine-tuning 평가에도 재사용 (선택)
+## 7. 모델 평가 — zero-shot 비교, 이후 fine-tuning 평가에도 재사용 (선택)
 
 ```bash
-python scripts/17_run_model_eval.py --model-config configs/models/bge_m3.yaml --split val
-python scripts/18_score_model_runs.py --split val
+python scripts/14_run_model_eval.py --model-config configs/models/bge_m3.yaml --split val
+python scripts/15_score_model_runs.py --split val
 ```
 
 `docs/MODELING.md` 참고. Fine-tuning 이후에도 이 두 스크립트를 그대로 써서 fine-tuned 모델을
@@ -176,16 +155,21 @@ python scripts/18_score_model_runs.py --split val
 ## 사람 개입이 필요한 범위
 
 01~07(전처리~corpus~lexical pooling)까지는 데이터가 바뀌어도 사람 개입 없이 끝까지 재실행됩니다.
-**08~13(calibration + train/val/test 본 애노테이션 + adjudication)은 실제 사람이 거쳐야** 최종
+**08~10(train/val/test 본 애노테이션 + adjudication)은 실제 사람이 거쳐야** 최종
 `qrels_train.csv`/`qrels_val.csv`/`qrels_test.csv`가 나옵니다. 이 과정을 건너뛰고 자동으로 생성하는
 방법은 없습니다 — TREC 스타일 pooling + double annotation(val/test) + single annotation(train) +
 adjudication 방식을 그대로 따른 설계입니다.
+
+**calibration 단계는 삭제했습니다.** 한때 08~10번이 calibration(애노테이터 간 사전 신뢰도 보정)
+단계였지만, 실제로 한 번도 쓰지 않았고(바로 본 애노테이션으로 진행) 하드코딩된 family 목록이
+예전 영문 이름 그대로라 지금 데이터로는 실행 자체가 안 됐습니다. 필요해지면 git 이력(calibration
+관련 커밋)에서 복원하되, family 목록은 현재 `query_families_v1.yaml` 기준으로 다시 써야 합니다.
 
 **규칙 기반(rule-based) train 자동 라벨링을 시도했다가 되돌린 이력**: 한때 `08_auto_label_train_qrels.py`로
 query family의 `positive_terms`/`boundary_terms` 문자열 매칭만으로 train qrels를 자동 생성하는 방식을
 썼습니다(weak supervision). 같은 대전/세종 corpus·같은 term 정의로 사람이 만든 기존 train qrels와
 직접 비교해본 결과, 사람이 `relevance=3`으로 확정한 문서의 약 80%가 이 방식에서는 `relevance=0`으로
-떨어지는(재현율이 매우 낮은) 문제가 확인되어, 다시 사람 라벨링 방식(현재 문서의 4~6절)으로 되돌렸습니다.
+떨어지는(재현율이 매우 낮은) 문제가 확인되어, 다시 사람 라벨링 방식(현재 문서의 4~5절)으로 되돌렸습니다.
 해당 스크립트와 상세 내용은 `archive/rule_based_train_labeling/`에 보존되어 있습니다.
 
 ## Query family 원본

@@ -32,8 +32,8 @@ pip install -e ".[dev]"
 ```
 
 `pip install -e ".[embedding]"`는 dense encoder(torch/transformers/sentence-transformers)가 필요할 때만
-추가로 설치하세요. **Python은 3.11만 지원합니다** (`pyproject.toml`의 `requires-python`) — `ir-measures`가
-Python 3.12+에서 제거된 `ast.Num`을 사용해 평가 스크립트(16번)가 깨집니다.
+추가로 설치하세요. `pyproject.toml`의 `requires-python`은 3.11을 기준으로 검증됐지만, 평가 스크립트
+(13번)에 Python 3.12+ 호환 shim이 들어있어 `ir-measures`의 `ast.Num` 제거 이슈는 우회됩니다.
 
 ## 폴더 구조
 
@@ -41,8 +41,9 @@ Python 3.12+에서 제거된 `ast.Num`을 사용해 평가 스크립트(16번)�
 configs/
   data/default.yaml              raw xlsx 스키마·컬럼 매핑·지역(시도) 별칭 테이블·검증 규칙
   benchmark/storesearch_ko_v1.yaml   벤치마크 경로/버전/파라미터(pooling, annotation, validation, evaluation)
-  benchmark/query_families_v1.yaml   query family 정의 (직접 편집 대상, docs/EXTENDING_DATA.md 참고)
-  evaluation/default.yaml        공식 metric 목록 (문서화용 — 16_evaluate_run.py는 metric을 자체 상수로 갖고 있음)
+  benchmark/query_families_v1.yaml   query family 정의 (생성물 — data/query/queryset_final.xlsx에서
+                                  import_queryset_xlsx.py로 생성, 직접 편집 금지. docs/EXTENDING_DATA.md 참고)
+  evaluation/default.yaml        공식 metric 목록 (문서화용 — 13_evaluate_run.py는 metric을 자체 상수로 갖고 있음)
   models/*.yaml                  비교 대상 임베딩 모델 설정 (zero-shot 비교/파인튜닝 후보)
 src/store_search_ai/
   common/io.py                   yaml/엑셀 로딩 유틸
@@ -50,7 +51,7 @@ src/store_search_ai/
   pipeline/common.py             scripts/*.py 공통 보일러플레이트 (yaml 로드, TREC 저장 등)
   models/                        임베딩 인코더 (BEIR 스타일, docs/MODELING.md 참고)
   retrieval/exact_search.py      exact cosine 검색 (ANN 이전 단계 모델 비교용)
-scripts/01_*.py ~ scripts/18_*.py   파이프라인 본체 (docs/PIPELINE.md 참고)
+scripts/01_*.py ~ scripts/15_*.py   파이프라인 본체 (docs/PIPELINE.md 참고)
 scripts/import_queryset_xlsx.py    data/query/queryset_final.xlsx → query_families_v1.yaml 변환기(번호 없음, 05 이전에 1회성 실행)
 scripts/prepare_finetune_dataset.py  train qrels+corpus → fine-tuning용 jsonl (번호 없음, docs/TRAINING.md 참고)
 data/
@@ -66,7 +67,7 @@ models/                         fine-tuned 모델 가중치 (.gitignore 처리 �
 tests/                          단위 테스트 (pytest)
 colab/                          Colab(GPU)에서 임베딩 모델 인코딩/학습하는 스크립트 (colab/README.md 참고)
 docs/
-  PIPELINE.md                    18단계 실행 순서·인자·사람 개입 지점 (필독)
+  PIPELINE.md                    15단계 실행 순서·인자·사람 개입 지점 (필독)
   EXTENDING_DATA.md               raw 데이터 확장 / query family 재정의 방법
   MODELING.md                    임베딩 모델 zero-shot 비교 구조 (BEIR 스타일)
   TRAINING.md                    Colab에서 fine-tuning 하는 방법 (Qwen3=ms-swift/LoRA, 나머지=sentence-transformers)
@@ -102,25 +103,22 @@ python scripts/04_build_corpus.py
 | 5 | `05_init_benchmark.py` | 없음 | `query_families_v1.yaml` → `queries.csv` |
 | 6 | `06_generate_lexical_runs.py` | 없음 | TF-IDF/BM25 pooling run |
 | 7 | `07_build_annotation_pool.py` | 없음 | candidate pool 생성 |
-| 8 | `08_make_calibration_v1_sheets.py` | 없음(시트만 생성) | calibration v1 시트 생성 |
-| — | (사람이 직접 라벨링) | **필요** | annotator A, B가 calibration 시트를 채움 |
-| 9 | `09_merge_calibration_annotations.py` | 없음 | A/B 합치도(Cohen's kappa) 리포트 (v1/v2 재사용) |
-| 10 | `10_make_calibration_v2_sheets.py` | 없음(시트만 생성) | 경계 불명확 family 재검증용 v2 시트 생성 |
-| 11 | `11_make_full_annotation_sheets.py` | 없음(시트만 생성) | train(A 단독)/val·test(A,B) 애노테이션 시트 생성 |
+| 8 | `08_make_full_annotation_sheets.py` | 없음(시트만 생성) | train(A 단독)/val·test(A,B) 애노테이션 시트 생성 |
 | — | (사람이 직접 라벨링) | **필요** | annotator가 train/val/test 시트를 채워 `*_completed.csv`로 저장 |
-| 12 | `12_prepare_full_annotations.py` | 없음 | train 단일 라벨 → provisional qrels, val/test A/B 비교 + adjudication 대상 분리 |
+| 9 | `09_prepare_full_annotations.py` | 없음 | train 단일 라벨 → provisional qrels, val/test A/B 비교 + adjudication 대상 분리, agreement_report.json 생성 |
 | — | (사람이 직접 조정) | **필요** | 3rd adjudicator가 val/test 불일치 건 확정 |
-| 13 | `13_apply_adjudication_patch.py` | 없음 | adjudication 패치 반영 |
-| 14 | `14_build_qrels.py` | 없음 | train + val/test(모두 사람) 병합 → 최종 qrels |
-| 15 | `15_validate_benchmark.py` | 없음 | 무결성 검증 |
-| 16 | `16_evaluate_run.py` | 없음 | 공식 evaluator (nDCG@10 등) |
-| 17 | `17_run_model_eval.py` | 없음(GPU 필요) | 임베딩 모델(zero-shot/fine-tuned 공통) 인코딩 → 검색 → 16번 호출 |
-| 18 | `18_score_model_runs.py` | 없음 | 여러 run을 모아 리더보드 생성 |
+| 10 | `10_apply_adjudication_patch.py` | 없음 | adjudication 패치 반영 |
+| 11 | `11_build_qrels.py` | 없음 | train + val/test(모두 사람) 병합 → 최종 qrels |
+| 12 | `12_validate_benchmark.py` | 없음 | 무결성 검증 |
+| 13 | `13_evaluate_run.py` | 없음 | 공식 evaluator (nDCG@10 등) |
+| 14 | `14_run_model_eval.py` | 없음(GPU 필요) | 임베딩 모델(zero-shot/fine-tuned 공통) 인코딩 → 검색 → 13번 호출 |
+| 15 | `15_score_model_runs.py` | 없음 | 여러 run을 모아 리더보드 생성 |
 
-01~07은 사람 개입 없이 끝까지 자동 재실행됩니다(`make pool`). 08~13은 calibration + train/val/test 본
-애노테이션 + adjudication을 위한 실제 사람 작업이 필요한 구간입니다 — 이 구간을 건너뛰고 자동으로
-생성하는 방법은 없습니다(TREC 스타일 pooling + double annotation(val/test)/single annotation(train) +
-adjudication 관례를 그대로 따름).
+01~07은 사람 개입 없이 끝까지 자동 재실행됩니다(`make pool`). 08~10은 train/val/test 본 애노테이션 +
+adjudication을 위한 실제 사람 작업이 필요한 구간입니다 — 이 구간을 건너뛰고 자동으로 생성하는 방법은
+없습니다(TREC 스타일 pooling + double annotation(val/test)/single annotation(train) + adjudication
+관례를 그대로 따름). calibration(애노테이터 사전 신뢰도 보정) 단계는 실제로 한 번도 안 쓰이고
+family 목록이 낡아서 삭제했습니다 — 필요하면 git 이력에서 복원하되 family 목록은 다시 써야 합니다.
 
 ## Query family 추가/재정의
 
@@ -132,7 +130,7 @@ adjudication 관례를 그대로 따름).
 
 - 분할 단위는 **개별 query가 아니라 query family**입니다. 한 family(예: `chicken`)는 train/val/test 중
   정확히 하나에만 속하고, 그 family의 모든 variant(exact/synonym/paraphrase/colloquial)가 같은 split으로
-  갑니다. `15_validate_benchmark.py`가 family가 두 split에 걸치지 않는지 검사합니다.
+  갑니다. `12_validate_benchmark.py`가 family가 두 split에 걸치지 않는지 검사합니다.
 - **Corpus(매장 문서)는 분할하지 않습니다** — train/val/test 모두 동일한 전체 corpus를 대상으로
   검색합니다. BEIR/TREC 스타일 retrieval 벤치마크와 동일하게, 나뉘는 것은 문서가 아니라 **query(및 그
   정답 판정)**입니다.
@@ -142,7 +140,7 @@ adjudication 관례를 그대로 따름).
   "학습 때 전혀 보지 못한 새로운 매장 카테고리"에 대한 검색 성능을 측정하게 됩니다 — MTEB/BEIR이
   embedding 모델을 미학습 도메인/태스크에 대해 평가하는 것과 같은 철학입니다.
 - **train**: fine-tuning용 (query, positive doc, negative doc) 쌍을 만드는 데 씁니다. qrels는
-  애노테이터 1명이 직접 판정한 라벨입니다(`11_make_full_annotation_sheets.py` → `12_prepare_full_annotations.py`).
+  애노테이터 1명이 직접 판정한 라벨입니다(`08_make_full_annotation_sheets.py` → `09_prepare_full_annotations.py`).
   모델 성능을 "보고"하는 데는 쓰지 않으므로 val/test와 달리 이중 라벨링은 하지 않습니다.
 - **val**: 체크포인트/템플릿(T1/T2/T3)/하이퍼파라미터 선택에만 씁니다. 사람이 이중 라벨링 +
   adjudication한 gold qrels입니다. 절대 gradient 학습에 쓰지 않습니다.
@@ -161,7 +159,7 @@ Qwen3 임베딩 파인튜닝에 들어가기 전에 팀원과 아래를 공유�
    - `data/corpus/store_corpus_v002.parquet` (+ `_manifest.json`) — 검색 대상 전체 corpus.
    - `benchmark/storesearch_ko_v1/queries.csv`, `annotation_guideline.md`
    - `benchmark/storesearch_ko_v1/qrels_train.csv`, `qrels_val.csv`, `qrels_test.csv`, `qrels.csv`
-     (+ 대응 `.trec`), `benchmark_manifest.json` — **14_build_qrels.py 실행 후** 생성됩니다.
+     (+ 대응 `.trec`), `benchmark_manifest.json` — **11_build_qrels.py 실행 후** 생성됩니다.
 3. **raw 원본**(`data/raw/stores_20260907.xlsx`)은 용량이 커서 필수는 아니지만, 재현을 위해 공유 스토리지
    경로만이라도 팀과 합의해 두세요. 파생 산출물(2번)만 공유해도 파이프라인을 다시 돌릴 필요 없이 학습에
    바로 쓸 수 있습니다.
@@ -171,7 +169,7 @@ Qwen3 임베딩 파인튜닝에 들어가기 전에 팀원과 아래를 공유�
 ## 평가
 
 ```bash
-python scripts/16_evaluate_run.py --run <run.csv> --tag <experiment_name>
+python scripts/13_evaluate_run.py --run <run.csv> --tag <experiment_name>
 ```
 
 Run CSV 스키마: `query_id,doc_id,rank,score,system`. Primary metric은 `nDCG@10`(부트스트랩 95% CI 포함).

@@ -7,6 +7,5 @@
   "unweighted_cohen_kappa": 0.4605216952045612,
   "quadratic_weighted_cohen_kappa": 0.5741576957267239,
   "rows_needing_adjudication": 10457,
-  "binary_relevance_threshold": 2,
-  "note": "val+test 전체 double annotation 기준(14건 B 재판정 반영 후)."
+  "binary_relevance_threshold": 2
 }
